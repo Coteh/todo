@@ -1,0 +1,12 @@
+{
+    "todo": {
+        "id": 0,
+        "name": "Finish initial version of Todo App",
+        "description": "Get the basic functionality down."
+    },
+    "todo": {
+        "id": 0,
+        "name": "Fix bugs",
+        "description": "Squash anything that comes up."
+    }
+}
