@@ -1,12 +1,26 @@
 {
     "todo": {
         "id": 0,
-        "name": "Finish initial version of Todo App",
-        "description": "Get the basic functionality down."
+        "category_id": 0,
+        "name": "Category ID",
+        "description": "Add category ID option for todo items when performing todo add [name] [description]"
     },
     "todo": {
         "id": 0,
-        "name": "Fix bugs",
-        "description": "Squash anything that comes up."
+        "category_id": 1,
+        "name": "Label Colors",
+        "description": "Add labels to todo items, trello style!"
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Remove Categories",
+        "description": "Add option to remove a category."
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 1,
+        "name": "Checklist",
+        "description": "Ability to check off todo items you have completed."
     }
 }
