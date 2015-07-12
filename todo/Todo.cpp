@@ -204,6 +204,28 @@ void Todo::removeAllToDos(){
 	saveToDos();
 }
 
+int Todo::removeCategory(int _categoryID){
+	ToDoCategory category;
+	try{
+		category = getCategory(_categoryID);
+	} catch (int e) {
+		if (e == -1){
+			printf("ERROR: Could not get category of id %i\n", _categoryID);
+		} else{
+			printf("ERROR: Unknown error getting category.\n");
+		}
+		return - 1;
+	}
+	for (std::vector<ToDoCategory>::iterator cateItr = m_categories.begin(); cateItr != m_categories.end(); cateItr++){
+		if (cateItr->id == _categoryID){
+			m_categories.erase(cateItr);
+			saveCategories();
+			return 0;
+		}
+	}
+	return -1;
+}
+
 void Todo::writeEmptyConfig(std::string _fileName){
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);

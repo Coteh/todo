@@ -130,6 +130,7 @@ int main(int argc, char const *argv[]){
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
 					printf("usage: todo remove [--h] <command>\n\nList of commands:\n");
 					printf(" [index]         Index number of todo item to delete.\n");
+					printf(" category        Remove a category specified by [category_id].\n");
 					printf(" all             Clear all todo items.\n");
 					return 0;
 				//If we are going to remove all todos...
@@ -137,6 +138,23 @@ int main(int argc, char const *argv[]){
 					todoEngine.removeAllToDos(); //remove 'em all!
 					printf("All ToDos cleared!\n");
 					return 0;
+				} else if (strcmp(argv[2], "category") == 0){
+					if (argc > 3){
+						char* pEnd;
+						int cateIDNum = strtol(argv[3], &pEnd, 0);
+						if (strcmp(pEnd, "\0") != 0){
+							printf("ERROR: Could not process ID number of the category to remove.");
+							return -1;
+						}
+						if (todoEngine.removeCategory(cateIDNum) == -1){
+							printf("ERROR: No category exists with ID of %i\n", cateIDNum);
+						} else{
+							printf("Category removed!\n");
+						}
+						return 0;
+					}
+					printf("ERROR: Please provide the ID number of the category to remove.\n");
+					return -1;
 				}
 				char* pEnd;
 				int indexNum = strtol(argv[2], &pEnd, 0);

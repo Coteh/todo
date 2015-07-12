@@ -13,14 +13,26 @@
     },
     "todo": {
         "id": 0,
-        "category_id": 0,
-        "name": "Remove Categories",
-        "description": "Add option to remove a category."
-    },
-    "todo": {
-        "id": 0,
         "category_id": 1,
         "name": "Checklist",
         "description": "Ability to check off todo items you have completed."
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "On Error Parsing JSON Database...",
+        "description": "Ask the user if they would like to generate a new file instead of automatically making one."
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Todo Class Prints",
+        "description": "Reduce the amount of print statements in Todo class methods."
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "set command",
+        "description": "Set a category ID for todo item, etc."
     }
 }

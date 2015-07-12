@@ -24,6 +24,7 @@ public:
 	void addCategory(std::string _name);
 	void removeToDoByIndex(int _index);
 	void removeAllToDos();
+	int removeCategory(int _categoryID);
 private:
 	std::vector<ToDoItem> m_todoCollection;
 	std::vector<ToDoCategory> m_categories;
