@@ -55,6 +55,8 @@ void Todo::loadToDos(){
 					toDoItem.id = todoItr->value.GetInt();
 				} else if (strcmp(todoItr->name.GetString(), "category_id") == 0 && todoItr->value.IsInt()){
 					toDoItem.categoryID = todoItr->value.GetInt();
+				} else if (strcmp(todoItr->name.GetString(), "completed") == 0 && todoItr->value.IsBool()){
+					toDoItem.completed = todoItr->value.GetBool();
 				}
 			}
 			m_todoCollection.push_back(toDoItem);
@@ -106,6 +108,8 @@ void Todo::saveToDos(){
 		writer.String(m_todoCollection[i].name.c_str());
 		writer.Key("description");
 		writer.String(m_todoCollection[i].description.c_str());
+		writer.Key("completed");
+		writer.Bool(m_todoCollection[i].completed);
 		writer.EndObject();
 	}
 	writer.EndObject();
@@ -133,22 +137,30 @@ void Todo::saveCategories(){
 }
 
 void Todo::printToDos(){
+	printToDos(false);
+}
+
+void Todo::printToDos(bool _verbose){
 	size_t todoSize = m_todoCollection.size();
 	printf("======= Things to Do ==========\n");
 	for (size_t i = 0; i < todoSize; i++){
 		if (i > 0 && i < todoSize) printf("---------------------------\n");
-		printf("%i. Name: %s\n", i + 1, m_todoCollection[i].name.c_str());
-		printf("Description: %s\n", m_todoCollection[i].description.c_str());
+		printf("%i. ", i + 1);
+		printToDoItem(m_todoCollection[i], _verbose);
 	}
 	printf("===============================\n");
 }
 
 void Todo::printToDos(int _categoryID){
+	printToDos(_categoryID, false);
+}
+
+void Todo::printToDos(int _categoryID, bool _verbose){
 	size_t todoSize = m_todoCollection.size();
 	ToDoCategory category;
 	try{
 		category = getCategory(_categoryID);
-	} catch(int e) {
+	} catch (int e) {
 		if (e == -1){
 			printf("ERROR: Could not get category of id %i\n", _categoryID);
 		} else{
@@ -161,12 +173,29 @@ void Todo::printToDos(int _categoryID){
 	for (size_t i = 0; i < todoSize; i++){
 		if (m_todoCollection[i].categoryID == category.id){
 			if (shownAmt > 0 && i < todoSize) printf("---------------------------\n");
-			printf("%i. Name: %s\n", i + 1, m_todoCollection[i].name.c_str());
-			printf("Description: %s\n", m_todoCollection[i].description.c_str());
+			printf("%i. ", i + 1);
+			printToDoItem(m_todoCollection[i], _verbose);
 			shownAmt++;
 		}
 	}
 	printf("==================================================\n");
+}
+
+void Todo::printToDoItem(const ToDoItem& _toDoItem){
+	printToDoItem(_toDoItem, false);
+}
+
+void Todo::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
+	char *nameTag = "", *descriptionTag = "";
+	if (_verbose){
+		nameTag = "Name: ";
+		descriptionTag = "Description: ";
+	}
+	printf("[%s] %s%s\n", (_toDoItem.completed) ? "X" : " ", nameTag, _toDoItem.name.c_str());
+	printf("%s%s\n", descriptionTag, _toDoItem.description.c_str());
+	if (_verbose){
+		printf("Category ID: %i\n", _toDoItem.categoryID);
+	}
 }
 
 void Todo::printCategories(){
@@ -224,6 +253,22 @@ int Todo::removeCategory(int _categoryID){
 		}
 	}
 	return -1;
+}
+
+void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
+		throw -1;
+	}
+	m_todoCollection[_toDoIndex].categoryID = _categoryID;
+	saveToDos();
+}
+
+void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
+		throw -1;
+	}
+	m_todoCollection[_toDoIndex].completed = _completed;
+	saveToDos();
 }
 
 void Todo::writeEmptyConfig(std::string _fileName){

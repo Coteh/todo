@@ -6,6 +6,7 @@ struct ToDoItem {
 	std::string description;
 	int id; //currently unused
 	int categoryID;
+	bool completed;
 };
 
 struct ToDoCategory {

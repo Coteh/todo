@@ -22,6 +22,7 @@ void addToDoDialog(){
 	int cateID = 0;
 	scanf_s("%i", &cateID);
 	itemToAdd.categoryID = cateID;
+	itemToAdd.completed = false;
 	todoEngine.addToDo(itemToAdd);
 	todoEngine.printToDos();
 }
@@ -57,9 +58,12 @@ int main(int argc, char const *argv[]){
 		} else if (strcmp(argv[1], "show") == 0 || strcmp(argv[1], "print") == 0){
 			if (argc > 2){
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-					printf("usage: todo show/print [--h] <command>\n\nDefault action is to show all todo items.\n\nList of commands:\n");
+					printf("usage: todo show/print [--h] <command> [-v]\n\nDefault action is to show all todo items.\n\nList of commands:\n");
 					printf(" categories         Show all categories.\n");
 					printf(" by-category        Show todo items by category of [category_id].\n");
+					return 0;
+				} else if (strcmp(argv[2], "-v") == 0){
+					todoEngine.printToDos(true);
 					return 0;
 				} else if (strcmp(argv[2], "categories") == 0){
 					todoEngine.printCategories();
@@ -71,6 +75,12 @@ int main(int argc, char const *argv[]){
 						if (strcmp(pEnd, "\0") != 0){
 							printf("ERROR: Could not process an id number for todo category.");
 							return -1;
+						}
+						if (argc > 4){
+							if (strcmp(argv[4], "-v") == 0){
+								todoEngine.printToDos(idNum, true);
+								return 0;
+							}
 						}
 						todoEngine.printToDos(idNum);
 						return 0;
@@ -98,6 +108,7 @@ int main(int argc, char const *argv[]){
 				item.name = argv[2];
 				item.description = argv[3];
 				item.categoryID = 0; //will be assigned to first category automatically for now
+				item.completed = false;
 				todoEngine.addToDo(item);
 				printf("Todo item added.\n");
 				if (argc > 4){
@@ -129,9 +140,9 @@ int main(int argc, char const *argv[]){
 				//If we are calling for help
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
 					printf("usage: todo remove [--h] <command>\n\nList of commands:\n");
-					printf(" [index]         Index number of todo item to delete.\n");
-					printf(" category        Remove a category specified by [category_id].\n");
-					printf(" all             Clear all todo items.\n");
+					printf(" [index]\t\t\t\tIndex number of todo item to delete.\n");
+					printf(" category [category_id]\t\t\tRemove a category specified by [category_id].\n");
+					printf(" all					Clear all todo items.\n");
 					return 0;
 				//If we are going to remove all todos...
 				} else if (strcmp(argv[2], "all") == 0){
@@ -180,6 +191,71 @@ int main(int argc, char const *argv[]){
 			} else{
 				removeToDoDialog();
 				return 0;
+			}
+		} else if (strcmp(argv[1], "set") == 0){
+			if (argc > 2){
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
+					printf("usage: todo set [--h] <command>\n\nList of commands:\n");
+					printf(" todo [index] <command>         Perform set operations on todo item of [index].\n");
+					return 0;
+				} else if (strcmp(argv[2], "todo") == 0){
+					if (argc > 4){
+						char* pEnd;
+						int indexNum = strtol(argv[3], &pEnd, 0);
+						if (strcmp(pEnd, "\0") != 0){
+							printf("ERROR: Could not process an index number for todo item to retrieve.\n");
+							return -1;
+						}
+						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "--h") == 0){
+							printf("usage: todo set todo %i [--h] <command>\n\nList of commands:\n", indexNum);
+							printf(" category [category_id]		Switch todo item's category to a category of [category_id].\n");
+							printf(" mark/unmark				Check/uncheck todo item.\n");
+							return 0;
+						} else if (strcmp(argv[4], "category") == 0){
+							if (argc <= 5){
+								printf("ERROR: Enter the ID of the category to switch to.\n");
+								return -1;
+							}
+							int cateID = strtol(argv[5], &pEnd, 0);
+							if (strcmp(pEnd, "\0") != 0){
+								printf("ERROR: Could not process an id number for category.\n");
+								return -1;
+							}
+							try{
+								todoEngine.setToDoToCategory(indexNum - 1, cateID);
+							} catch (int e){
+								if (e == -1){
+									printf("ERROR: Index number %i out of todo list range.\n", indexNum);
+									return -1;
+								}
+							}
+							printf("ToDo item's category has been changed to category of id %i.\n", cateID);
+							return 0;
+						} else if (strcmp(argv[4], "mark") == 0){
+							try{
+								todoEngine.markToDoCompleted(indexNum - 1, true);
+							} catch (int e){
+								if (e == -1){
+									printf("ERROR: Can't mark an item of index out of range.\n");
+									return -1;
+								}
+							}
+							printf("ToDo item has been marked as completed.\n");
+							return 0;
+						} else if (strcmp(argv[4], "unmark") == 0){
+							try{
+								todoEngine.markToDoCompleted(indexNum - 1, false);
+							} catch (int e){
+								if (e == -1){
+									printf("ERROR: Can't unmark an item of index out of range.\n");
+									return -1;
+								}
+							}
+							printf("ToDo item has been unmarked.\n");
+							return 0;
+						}
+					}
+				}
 			}
 		} else if (strcmp(argv[1], "clear") == 0){
 			//Duplicate function of "remove all"

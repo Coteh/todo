@@ -3,36 +3,42 @@
         "id": 0,
         "category_id": 0,
         "name": "Category ID",
-        "description": "Add category ID option for todo items when performing todo add [name] [description]"
+        "description": "Add category ID option for todo items when performing todo add [name] [description]",
+        "completed": false
     },
     "todo": {
         "id": 0,
         "category_id": 1,
         "name": "Label Colors",
-        "description": "Add labels to todo items, trello style!"
+        "description": "Add labels to todo items, trello style!",
+        "completed": false
     },
     "todo": {
         "id": 0,
         "category_id": 1,
         "name": "Checklist",
-        "description": "Ability to check off todo items you have completed."
+        "description": "Ability to check off todo items you have completed.",
+        "completed": true
     },
     "todo": {
         "id": 0,
         "category_id": 0,
         "name": "On Error Parsing JSON Database...",
-        "description": "Ask the user if they would like to generate a new file instead of automatically making one."
+        "description": "Ask the user if they would like to generate a new file instead of automatically making one.",
+        "completed": false
     },
     "todo": {
         "id": 0,
         "category_id": 0,
         "name": "Todo Class Prints",
-        "description": "Reduce the amount of print statements in Todo class methods."
+        "description": "Reduce the amount of print statements in Todo class methods.",
+        "completed": false
     },
     "todo": {
         "id": 0,
         "category_id": 0,
         "name": "set command",
-        "description": "Set a category ID for todo item, etc."
+        "description": "Set a category ID for todo item, etc.",
+        "completed": true
     }
 }

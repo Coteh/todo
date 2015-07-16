@@ -17,7 +17,11 @@ public:
 	void saveToDos();
 	void saveCategories();
 	void printToDos();
+	void printToDos(bool _verbose);
 	void printToDos(int _categoryID);
+	void printToDos(int _categoryID, bool _verbose);
+	void printToDoItem(const ToDoItem& _toDoItem);
+	void printToDoItem(const ToDoItem& _toDoItem, bool _verbose);
 	void printCategories();
 
 	void addToDo(ToDoItem _toDoItem);
@@ -25,6 +29,9 @@ public:
 	void removeToDoByIndex(int _index);
 	void removeAllToDos();
 	int removeCategory(int _categoryID);
+
+	void setToDoToCategory(int _toDoIndex, int _categoryID);
+	void markToDoCompleted(int _toDoIndex, bool _completed);
 private:
 	std::vector<ToDoItem> m_todoCollection;
 	std::vector<ToDoCategory> m_categories;
