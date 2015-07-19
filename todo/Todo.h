@@ -12,10 +12,8 @@ public:
 	int getTodoCount();
 
 	void init();
-	void loadToDos();
-	void loadCategories();
-	void saveToDos();
-	void saveCategories();
+	void loadToDoFile();
+	void saveToDoFile();
 	void printToDos();
 	void printToDos(bool _verbose);
 	void printToDos(int _categoryID);

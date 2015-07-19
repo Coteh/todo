@@ -208,8 +208,8 @@ int main(int argc, char const *argv[]){
 						}
 						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "--h") == 0){
 							printf("usage: todo set todo %i [--h] <command>\n\nList of commands:\n", indexNum);
-							printf(" category [category_id]		Switch todo item's category to a category of [category_id].\n");
-							printf(" mark/unmark				Check/uncheck todo item.\n");
+							printf(" category [category_id]\t\t\tSwitch todo item's category to a category of [category_id].\n");
+							printf(" mark/unmark\t\t\t\tCheck/uncheck todo item.\n");
 							return 0;
 						} else if (strcmp(argv[4], "category") == 0){
 							if (argc <= 5){
@@ -218,7 +218,7 @@ int main(int argc, char const *argv[]){
 							}
 							int cateID = strtol(argv[5], &pEnd, 0);
 							if (strcmp(pEnd, "\0") != 0){
-								printf("ERROR: Could not process an id number for category.\n");
+								printf("ERROR: Could not process an ID number for category.\n");
 								return -1;
 							}
 							try{

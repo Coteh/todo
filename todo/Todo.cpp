@@ -17,8 +17,7 @@ int Todo::getTodoCount(){
 }
 
 void Todo::init(){
-	loadToDos();
-	loadCategories();
+	loadToDoFile();
 }
 
 ToDoCategory Todo::getCategory(int _categoryID){
@@ -30,12 +29,12 @@ ToDoCategory Todo::getCategory(int _categoryID){
 	throw -1;
 }
 
-void Todo::loadToDos(){
-	std::string fileContents = FileIO::readFile("todos.list");
+void Todo::loadToDoFile(){
+	std::string fileContents = FileIO::readFile("todo.jsondb");
 	rapidjson::Document doc;
 	doc.Parse(fileContents.c_str());
 	if (doc.HasParseError()){
-		writeEmptyConfig("todos.list");
+		writeEmptyConfig("todo.jsondb");
 #ifdef _DEBUG
 		printf("ERROR: Error parsing todo database. New one has been generated!\n");
 #endif
@@ -60,24 +59,7 @@ void Todo::loadToDos(){
 				}
 			}
 			m_todoCollection.push_back(toDoItem);
-		}
-	}
-}
-
-void Todo::loadCategories(){
-	std::string fileContents = FileIO::readFile("categories.list");
-	rapidjson::Document doc;
-	doc.Parse(fileContents.c_str());
-	if (doc.HasParseError()){
-		writeEmptyConfig("categories.list");
-#ifdef _DEBUG
-		printf("ERROR: Error parsing category database. New one has been generated!\n");
-#endif
-		return;
-	}
-	rapidjson::Value *currJsonObj = &doc;
-	for (rapidjson::Value::MemberIterator memberItr = currJsonObj->MemberBegin(); memberItr != currJsonObj->MemberEnd(); ++memberItr) {
-		if (strcmp(memberItr->name.GetString(), "category") == 0){
+		} else if (strcmp(memberItr->name.GetString(), "category") == 0){
 			ToDoCategory category;
 			rapidjson::Value *cateVal = &memberItr->value;
 			for (rapidjson::Value::MemberIterator cateItr = cateVal->MemberBegin(); cateItr != cateVal->MemberEnd(); ++cateItr) {
@@ -92,7 +74,7 @@ void Todo::loadCategories(){
 	}
 }
 
-void Todo::saveToDos(){
+void Todo::saveToDoFile(){
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
@@ -112,16 +94,6 @@ void Todo::saveToDos(){
 		writer.Bool(m_todoCollection[i].completed);
 		writer.EndObject();
 	}
-	writer.EndObject();
-
-	FileIO::writeFile("todos.list", sb.GetString(), FileIO::FileWriteType::WRITE);
-}
-
-void Todo::saveCategories(){
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-
-	writer.StartObject();
 	for (size_t i = 0; i < m_categories.size(); i++){
 		writer.Key("category");
 		writer.StartObject();
@@ -133,7 +105,7 @@ void Todo::saveCategories(){
 	}
 	writer.EndObject();
 
-	FileIO::writeFile("categories.list", sb.GetString(), FileIO::FileWriteType::WRITE);
+	FileIO::writeFile("todo.jsondb", sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
 void Todo::printToDos(){
@@ -209,7 +181,7 @@ void Todo::printCategories(){
 
 void Todo::addToDo(ToDoItem _toDoItem){
 	m_todoCollection.push_back(_toDoItem);
-	saveToDos();
+	saveToDoFile();
 }
 
 void Todo::addCategory(std::string _name){
@@ -217,7 +189,7 @@ void Todo::addCategory(std::string _name){
 	categoryToAdd.name = _name;
 	categoryToAdd.id = m_categories.size();
 	m_categories.push_back(categoryToAdd);
-	saveCategories();
+	saveToDoFile();
 }
 
 void Todo::removeToDoByIndex(int _index){
@@ -225,12 +197,12 @@ void Todo::removeToDoByIndex(int _index){
 		throw -1;
 	}
 	m_todoCollection.erase(m_todoCollection.begin() + _index);
-	saveToDos();
+	saveToDoFile();
 }
 
 void Todo::removeAllToDos(){
 	m_todoCollection.clear();
-	saveToDos();
+	saveToDoFile();
 }
 
 int Todo::removeCategory(int _categoryID){
@@ -248,7 +220,7 @@ int Todo::removeCategory(int _categoryID){
 	for (std::vector<ToDoCategory>::iterator cateItr = m_categories.begin(); cateItr != m_categories.end(); cateItr++){
 		if (cateItr->id == _categoryID){
 			m_categories.erase(cateItr);
-			saveCategories();
+			saveToDoFile();
 			return 0;
 		}
 	}
@@ -260,7 +232,7 @@ void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
 		throw -1;
 	}
 	m_todoCollection[_toDoIndex].categoryID = _categoryID;
-	saveToDos();
+	saveToDoFile();
 }
 
 void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
@@ -268,7 +240,7 @@ void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
 		throw -1;
 	}
 	m_todoCollection[_toDoIndex].completed = _completed;
-	saveToDos();
+	saveToDoFile();
 }
 
 void Todo::writeEmptyConfig(std::string _fileName){

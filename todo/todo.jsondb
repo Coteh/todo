@@ -40,5 +40,34 @@
         "name": "set command",
         "description": "Set a category ID for todo item, etc.",
         "completed": true
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Todo Exception Handling",
+        "description": "Add better exception checking. Perhaps add in std::exception types?",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 1,
+        "name": "Configure Loaded File",
+        "description": "Change the current todo.list file being read, etc.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 1,
+        "name": "Label Colors (Part 2)",
+        "description": "Display colors on the command line corresponding to the label colors.",
+        "completed": false
+    },
+    "category": {
+        "name": "Function",
+        "id": 0
+    },
+    "category": {
+        "name": "Features",
+        "id": 1
     }
 }
