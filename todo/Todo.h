@@ -4,6 +4,8 @@
 struct ToDoItem;
 struct ToDoCategory;
 
+class TodoConfig;
+
 class Todo {
 public:
 	Todo();
@@ -11,9 +13,9 @@ public:
 
 	int getTodoCount();
 
-	void init();
 	void loadToDoFile();
 	void saveToDoFile();
+	void createNewToDoFile(std::string _filePath);
 	void printToDos();
 	void printToDos(bool _verbose);
 	void printToDos(int _categoryID);
@@ -30,12 +32,12 @@ public:
 
 	void setToDoToCategory(int _toDoIndex, int _categoryID);
 	void markToDoCompleted(int _toDoIndex, bool _completed);
+
+	TodoConfig* todoConfig;
 private:
 	std::vector<ToDoItem> m_todoCollection;
 	std::vector<ToDoCategory> m_categories;
 
 	ToDoCategory getCategory(int _categoryID);
-
-	void writeEmptyConfig(std::string _fileName);
 };
 

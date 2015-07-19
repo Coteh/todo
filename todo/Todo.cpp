@@ -1,4 +1,5 @@
 #include "Todo.h"
+#include "TodoConfig.h"
 #include "DataTypes.h"
 #include "FileIO.h"
 
@@ -7,17 +8,15 @@
 #include <rapidjson\stringbuffer.h>
 
 Todo::Todo() {
+	todoConfig = new TodoConfig();
 }
 
 Todo::~Todo() {
+	delete todoConfig;
 }
 
 int Todo::getTodoCount(){
 	return m_todoCollection.size();
-}
-
-void Todo::init(){
-	loadToDoFile();
 }
 
 ToDoCategory Todo::getCategory(int _categoryID){
@@ -30,15 +29,14 @@ ToDoCategory Todo::getCategory(int _categoryID){
 }
 
 void Todo::loadToDoFile(){
-	std::string fileContents = FileIO::readFile("todo.jsondb");
+	if (todoConfig == nullptr){
+		throw -2;
+	}
+	std::string fileContents = FileIO::readFile(todoConfig->getToDoFilePath());
 	rapidjson::Document doc;
 	doc.Parse(fileContents.c_str());
 	if (doc.HasParseError()){
-		writeEmptyConfig("todo.jsondb");
-#ifdef _DEBUG
-		printf("ERROR: Error parsing todo database. New one has been generated!\n");
-#endif
-		return;
+		throw -1;
 	}
 	rapidjson::Value *currJsonObj = &doc;
 	for (rapidjson::Value::MemberIterator memberItr = currJsonObj->MemberBegin(); memberItr != currJsonObj->MemberEnd(); ++memberItr) {
@@ -106,6 +104,16 @@ void Todo::saveToDoFile(){
 	writer.EndObject();
 
 	FileIO::writeFile("todo.jsondb", sb.GetString(), FileIO::FileWriteType::WRITE);
+}
+
+void Todo::createNewToDoFile(std::string _filePath){
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+
+	writer.StartObject();
+	writer.EndObject();
+
+	FileIO::writeFile(_filePath, sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
 void Todo::printToDos(){
@@ -241,14 +249,4 @@ void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
 	}
 	m_todoCollection[_toDoIndex].completed = _completed;
 	saveToDoFile();
-}
-
-void Todo::writeEmptyConfig(std::string _fileName){
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-
-	writer.StartObject();
-	writer.EndObject();
-
-	FileIO::writeFile(_fileName, sb.GetString(), FileIO::FileWriteType::WRITE);
 }

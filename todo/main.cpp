@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Todo.h"
+#include "TodoConfig.h"
 #include "DataTypes.h"
 #include "Helpers.h"
 
@@ -45,15 +46,58 @@ void removeToDoDialog(){
 	}
 }
 
+void init(){
+	TodoConfig* configObj = todoEngine.todoConfig;
+	if (configObj != nullptr){
+		try {
+			configObj->loadConfigFile();
+		} catch (int e) {
+			if (e == -1){
+				configObj->createNewConfigFile();
+#ifdef _DEBUG
+				printf("ERROR: Error parsing todo config file. New one has been generated!\n");
+#endif
+			} else {
+				printf("ERROR: Unexpected error! Exiting program!\n");
+				exit(-1);
+			}
+		}
+	}
+	try {
+		todoEngine.loadToDoFile();
+	} catch (int e) {
+		if (e == -1){
+			std::string todoFilePath = configObj->getToDoFilePath();
+			if (strcmp(todoFilePath.c_str(), "\0") == 0){ //if no todo filepath currently exists in config...
+				//Create a default one inside project directory
+				std::string fullFileDirectory = getProjectDirectory();
+				todoFilePath = fullFileDirectory + FOLDER_DELIM + "todo.jsondb";
+				//printf("Full FilePath: %s\n", todoFilePath.c_str());
+				configObj->setToDoFilePath(todoFilePath);
+				configObj->saveConfigFile();
+			}
+			todoEngine.createNewToDoFile(todoFilePath);
+#ifdef _DEBUG
+			printf("ERROR: Error parsing todo database. New one has been generated!\n");
+#endif
+		} else {
+			printf("ERROR: Unexpected error! Exiting program!\n");
+			exit(-1);
+		}
+	}
+}
+
 int main(int argc, char const *argv[]){
-	todoEngine.init();
+	init();
 	if (argc > 1){
 		if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "--h") == 0){
 			printf("usage: todo [--h] <command>\n\ntodo is a command-line app that organizes todo items.\n\nList of commands:\n");
-			printf(" add            Add a todo item. Provide a name and description for second and third arguments.\n");
-			printf(" remove         Remove a todo item by index number. Provide the todo's index number as the second argument.\n");
-			printf(" clear          Clear all todo items.\n");
-			printf(" show/print     Prints list of todo items that have been added.\n");
+			printf(" add\t\tAdd a todo item. Provide a name and description for second and third arguments.\n");
+			printf(" remove\t\tRemove a todo item by index number. Provide the todo's index number as the second argument.\n");
+			printf(" show/print\tPrints list of todo items that have been added.\n");
+			printf(" set\t\tModify existing todo items.\n");
+			printf(" config\t\tRetrieve/modify config information.\n");
+			printf(" clear\t\tClear all todo items.\n");
 			return 0;
 		} else if (strcmp(argv[1], "show") == 0 || strcmp(argv[1], "print") == 0){
 			if (argc > 2){
@@ -256,6 +300,37 @@ int main(int argc, char const *argv[]){
 						}
 					}
 				}
+			}
+		} else if (strcmp(argv[1], "config") == 0){
+			TodoConfig* configFile = todoEngine.todoConfig;
+			if (configFile != nullptr){
+				if (argc > 2){
+					if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
+						printf("usage: todo config [--h] <command>\n\nList of commands:\n");
+						printf(" filepath [filepath]	Get the filepath of todo database. (or set the filepath if [filepath] is provided)\n");
+						return 0;
+					} else if (strcmp(argv[2], "filepath") == 0){
+						if (argc > 3){
+							if (strcmp(argv[3], "set") == 0){
+								if (argc <= 4){
+									printf("ERROR: Enter a filepath for the new todo file.\n");
+									return -1;
+								} else {
+									std::string filePathToUse = argv[4];
+									configFile->setToDoFilePath(filePathToUse);
+									configFile->saveConfigFile();
+									printf("New todo filepath set!\n");
+									return 0;
+								}
+							}
+						} else{
+							printf("%s\n", configFile->getToDoFilePath().c_str());
+							return 0;
+						}
+					}
+				}
+			} else{
+				printf("ERROR: Config object NOT initialized!\n");
 			}
 		} else if (strcmp(argv[1], "clear") == 0){
 			//Duplicate function of "remove all"

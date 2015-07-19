@@ -70,12 +70,14 @@
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Todo.cpp" />
+    <ClCompile Include="TodoConfig.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="Todo.h" />
+    <ClInclude Include="TodoConfig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

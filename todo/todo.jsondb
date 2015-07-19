@@ -53,7 +53,7 @@
         "category_id": 1,
         "name": "Configure Loaded File",
         "description": "Change the current todo.list file being read, etc.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,
