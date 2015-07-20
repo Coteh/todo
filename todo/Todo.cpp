@@ -73,6 +73,9 @@ void Todo::loadToDoFile(){
 }
 
 void Todo::saveToDoFile(){
+	if (todoConfig == nullptr){
+		throw -2;
+	}
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
@@ -103,7 +106,7 @@ void Todo::saveToDoFile(){
 	}
 	writer.EndObject();
 
-	FileIO::writeFile("todo.jsondb", sb.GetString(), FileIO::FileWriteType::WRITE);
+	FileIO::writeFile(todoConfig->getToDoFilePath(), sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
 void Todo::createNewToDoFile(std::string _filePath){
