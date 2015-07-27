@@ -14,12 +14,13 @@ if(COMPILER_SUPPORTS_CXX11)
 elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 else()
-    message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
+    message(WARNING "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
 # include directories
 include_directories(${todo_SOURCE_DIR}/include)
-include_directories("~/Development_libs/rapidjson/include")
+set(RAPIDJSON_INCLUDE "~/Development_libs/rapidjson/include" CACHE FILEPATH "Include directory for rapidjson")
+include_directories(${RAPIDJSON_INCLUDE})
 
 # add definitions
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
