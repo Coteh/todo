@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 struct ToDoItem;
 struct ToDoCategory;
@@ -40,4 +41,3 @@ private:
 
 	ToDoCategory getCategory(int _categoryID);
 };
-

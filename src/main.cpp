@@ -21,7 +21,11 @@ void addToDoDialog(){
 	//The only way to assign a category to a todo item right now
 	printf("Provide the category id this item will be categorized in:\n");
 	int cateID = 0;
+#ifdef _WIN32
 	scanf_s("%i", &cateID);
+#else
+	scanf("%i", &cateID);
+#endif
 	itemToAdd.categoryID = cateID;
 	itemToAdd.completed = false;
 	todoEngine.addToDo(itemToAdd);
@@ -39,7 +43,11 @@ void addCategoryDialog(){
 void removeToDoDialog(){
 	printf("Please enter number of what \"to do\" item you would like to remove.\n");
 	int charRem = 0;
+#ifdef _WIN32
 	scanf_s("%i", &charRem);
+#else
+	scanf("%i", &charRem);
+#endif
 	if (charRem > 0 && charRem <= todoEngine.getTodoCount()){
 		todoEngine.removeToDoByIndex(charRem - 1);
 		todoEngine.printToDos();

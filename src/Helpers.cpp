@@ -37,7 +37,7 @@ std::string getCurrentDirectory(){
 	GetCurrentDirectory(num, buffer);
 	return buffer;
 #endif
-	return "\0";
+	return ".";
 }
 
 std::string getProjectDirectory(){
@@ -64,5 +64,5 @@ std::string getProjectDirectory(){
 	}
 	return projectDirectory;
 #endif
-	return "\0";
+	return ".";
 }
