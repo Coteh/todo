@@ -5,8 +5,10 @@
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "Helpers.h"
+#include "TodoPrinter.h"
 
 Todo todoEngine;
+TodoPrinter todoPrinter;
 
 void addToDoDialog(){
 	char thing[100];
@@ -29,7 +31,7 @@ void addToDoDialog(){
 	itemToAdd.categoryID = cateID;
 	itemToAdd.completed = false;
 	todoEngine.addToDo(itemToAdd);
-	todoEngine.printToDos();
+	todoPrinter.printToDos();
 }
 
 void addCategoryDialog(){
@@ -37,7 +39,7 @@ void addCategoryDialog(){
 	printf("Provide a name for this category.\n");
 	get_line(thing, 100);
 	todoEngine.addCategory(thing);
-	todoEngine.printCategories();
+	todoPrinter.printCategories();
 }
 
 void removeToDoDialog(){
@@ -50,7 +52,7 @@ void removeToDoDialog(){
 #endif
 	if (charRem > 0 && charRem <= todoEngine.getTodoCount()){
 		todoEngine.removeToDoByIndex(charRem - 1);
-		todoEngine.printToDos();
+		todoPrinter.printToDos();
 	}
 }
 
@@ -93,6 +95,7 @@ void init(){
 			exit(-1);
 		}
 	}
+	todoPrinter = TodoPrinter(&todoEngine);
 }
 
 int main(int argc, char const *argv[]){
@@ -115,10 +118,10 @@ int main(int argc, char const *argv[]){
 					printf(" by-category        Show todo items by category of [category_id].\n");
 					return 0;
 				} else if (strcmp(argv[2], "-v") == 0){
-					todoEngine.printToDos(true);
+					todoPrinter.printToDos(true);
 					return 0;
 				} else if (strcmp(argv[2], "categories") == 0){
-					todoEngine.printCategories();
+					todoPrinter.printCategories();
 					return 0;
 				} else if (strcmp(argv[2], "by-category") == 0){
 					if (argc > 3){
@@ -130,19 +133,25 @@ int main(int argc, char const *argv[]){
 						}
 						if (argc > 4){
 							if (strcmp(argv[4], "-v") == 0){
-								todoEngine.printToDos(idNum, true);
+								todoPrinter.printToDos(idNum, true);
 								return 0;
 							}
 						}
-						todoEngine.printToDos(idNum);
+						todoPrinter.printToDos(idNum);
 						return 0;
 					} else{
 						printf("ERROR: Please provide the index of the category to sort todos by.\n");
 						return -1;
 					}
+				} else if (strcmp(argv[2], "completed") == 0){
+					todoPrinter.printToDos(PrintShowType::COMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
+					return 0;
+				} else if (strcmp(argv[2], "incompleted") == 0){
+					todoPrinter.printToDos(PrintShowType::INCOMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
+					return 0;
 				}
 			} else{
-				todoEngine.printToDos();
+				todoPrinter.printToDos();
 				return 0;
 			}
 		} else if (strcmp(argv[1], "add") == 0){
@@ -165,7 +174,7 @@ int main(int argc, char const *argv[]){
 				printf("Todo item added.\n");
 				if (argc > 4){
 					if (strcmp(argv[4], "-p") == 0){
-						todoEngine.printToDos();
+						todoPrinter.printToDos();
 					}
 				}
 				return 0;
@@ -236,7 +245,7 @@ int main(int argc, char const *argv[]){
 				printf("ToDo item removed.\n");
 				if (argc > 3){
 					if (strcmp(argv[3], "-p") == 0){
-						todoEngine.printToDos();
+						todoPrinter.printToDos();
 					}
 				}
 				return 0;
@@ -349,7 +358,7 @@ int main(int argc, char const *argv[]){
 		printf("ERROR: Invalid command.\n");
 		return -1;
 	}
-	todoEngine.printToDos();
+	todoPrinter.printToDos();
 #ifdef _DEBUG
 	getchar();
 #endif

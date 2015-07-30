@@ -62,6 +62,13 @@
         "description": "Display colors on the command line corresponding to the label colors.",
         "completed": false
     },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Reduce Code Duplication in main.cpp",
+        "description": "Reduce code duplication by reorganizing command checks.",
+        "completed": false
+    },
     "category": {
         "name": "Function",
         "id": 0

@@ -119,77 +119,6 @@ void Todo::createNewToDoFile(std::string _filePath){
 	FileIO::writeFile(_filePath, sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
-void Todo::printToDos(){
-	printToDos(false);
-}
-
-void Todo::printToDos(bool _verbose){
-	size_t todoSize = m_todoCollection.size();
-	printf("======= Things to Do ==========\n");
-	for (size_t i = 0; i < todoSize; i++){
-		if (i > 0 && i < todoSize) printf("---------------------------\n");
-		printf("%i. ", i + 1);
-		printToDoItem(m_todoCollection[i], _verbose);
-	}
-	printf("===============================\n");
-}
-
-void Todo::printToDos(int _categoryID){
-	printToDos(_categoryID, false);
-}
-
-void Todo::printToDos(int _categoryID, bool _verbose){
-	size_t todoSize = m_todoCollection.size();
-	ToDoCategory category;
-	try{
-		category = getCategory(_categoryID);
-	} catch (int e) {
-		if (e == -1){
-			printf("ERROR: Could not get category of id %i\n", _categoryID);
-		} else{
-			printf("ERROR: Unknown error getting category.\n");
-		}
-		return;
-	}
-	printf("========== Things to Do in Category: %s ==========\n", category.name.c_str());
-	int shownAmt = 0;
-	for (size_t i = 0; i < todoSize; i++){
-		if (m_todoCollection[i].categoryID == category.id){
-			if (shownAmt > 0 && i < todoSize) printf("---------------------------\n");
-			printf("%i. ", i + 1);
-			printToDoItem(m_todoCollection[i], _verbose);
-			shownAmt++;
-		}
-	}
-	printf("==================================================\n");
-}
-
-void Todo::printToDoItem(const ToDoItem& _toDoItem){
-	printToDoItem(_toDoItem, false);
-}
-
-void Todo::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
-	char *nameTag = "", *descriptionTag = "";
-	if (_verbose){
-		nameTag = "Name: ";
-		descriptionTag = "Description: ";
-	}
-	printf("[%s] %s%s\n", (_toDoItem.completed) ? "X" : " ", nameTag, _toDoItem.name.c_str());
-	printf("%s%s\n", descriptionTag, _toDoItem.description.c_str());
-	if (_verbose){
-		printf("Category ID: %i\n", _toDoItem.categoryID);
-	}
-}
-
-void Todo::printCategories(){
-	size_t categoriesSize = m_categories.size();
-	printf("======== Categories ===========\n");
-	for (size_t i = 0; i < categoriesSize; i++){
-		printf("[ID: %i] %s\n", m_categories[i].id, m_categories[i].name.c_str());
-	}
-	printf("===============================\n");
-}
-
 void Todo::addToDo(ToDoItem _toDoItem){
 	m_todoCollection.push_back(_toDoItem);
 	saveToDoFile();
@@ -252,4 +181,12 @@ void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
 	}
 	m_todoCollection[_toDoIndex].completed = _completed;
 	saveToDoFile();
+}
+
+std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> Todo::getToDoItemIterator(){
+	return std::make_pair(m_todoCollection.begin(), m_todoCollection.end());
+}
+
+std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> Todo::getToDoCategoryIterator(){
+	return std::make_pair(m_categories.begin(), m_categories.end());
 }

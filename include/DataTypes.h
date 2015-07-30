@@ -13,3 +13,10 @@ struct ToDoCategory {
 	std::string name;
 	int id;
 };
+
+//TO DO
+//Implement labels
+struct ToDoLabel {
+	std::string name;
+	int color;
+};

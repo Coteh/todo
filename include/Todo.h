@@ -13,17 +13,11 @@ public:
 	~Todo();
 
 	int getTodoCount();
+	ToDoCategory getCategory(int _categoryID);
 
 	void loadToDoFile();
 	void saveToDoFile();
 	void createNewToDoFile(std::string _filePath);
-	void printToDos();
-	void printToDos(bool _verbose);
-	void printToDos(int _categoryID);
-	void printToDos(int _categoryID, bool _verbose);
-	void printToDoItem(const ToDoItem& _toDoItem);
-	void printToDoItem(const ToDoItem& _toDoItem, bool _verbose);
-	void printCategories();
 
 	void addToDo(ToDoItem _toDoItem);
 	void addCategory(std::string _name);
@@ -34,10 +28,11 @@ public:
 	void setToDoToCategory(int _toDoIndex, int _categoryID);
 	void markToDoCompleted(int _toDoIndex, bool _completed);
 
+	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> getToDoItemIterator();
+	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> getToDoCategoryIterator();
+
 	TodoConfig* todoConfig;
 private:
 	std::vector<ToDoItem> m_todoCollection;
 	std::vector<ToDoCategory> m_categories;
-
-	ToDoCategory getCategory(int _categoryID);
 };
