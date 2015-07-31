@@ -125,6 +125,7 @@ int main(int argc, char const *argv[]){
 					printf("usage: todo show/print [--h] <command> [-v]\n\nDefault action is to show all todo items.\n\nList of commands:\n");
 					printf(" categories\t\tShow all categories.\n");
 					printf(" labels\t\t\tShow all labels.\n");
+					printf(" label-colors\t\tShow all colors that a label can have.\n");
 					printf(" by-category\t\tShow todo items by category of [category_id].\n");
 					return 0;
 				} else if (strcmp(argv[2], "-v") == 0){
