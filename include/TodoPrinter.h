@@ -29,6 +29,8 @@ public:
 	void printToDoItem(const ToDoItem& _toDoItem);
 	void printToDoItem(const ToDoItem& _toDoItem, bool _verbose);
 	void printCategories();
+	void printLabels();
+	void printLabelColor(int _colorIndex, const char* _text);
 private:
 	Todo* m_toDoEngine;
 #ifdef _WIN32
@@ -36,7 +38,7 @@ private:
 	HANDLE hstdout;
 	static const WORD colors[];
 
-	void beginPrintPaint();
+	void beginPrintPaint(int _colorIndex);
 	void endPrintPaint();
 #endif
 };

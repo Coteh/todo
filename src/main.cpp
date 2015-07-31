@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <map>
 #include "Todo.h"
 #include "TodoConfig.h"
 #include "DataTypes.h"
@@ -9,6 +10,7 @@
 
 Todo todoEngine;
 TodoPrinter todoPrinter;
+std::map<std::string, LabelColor> labelColorNames;
 
 void addToDoDialog(){
 	char thing[100];
@@ -29,6 +31,7 @@ void addToDoDialog(){
 	scanf("%i", &cateID);
 #endif
 	itemToAdd.categoryID = cateID;
+	itemToAdd.labelID = -1;
 	itemToAdd.completed = false;
 	todoEngine.addToDo(itemToAdd);
 	todoPrinter.printToDos();
@@ -96,6 +99,12 @@ void init(){
 		}
 	}
 	todoPrinter = TodoPrinter(&todoEngine);
+	//Initializing color name map
+	labelColorNames["white"] = LabelColor::WHITE;
+	labelColorNames["green"] = LabelColor::GREEN;
+	labelColorNames["magenta"] = LabelColor::MAGENTA;
+	labelColorNames["yellow"] = LabelColor::YELLOW;
+	labelColorNames["red"] = LabelColor::RED;
 }
 
 int main(int argc, char const *argv[]){
@@ -114,14 +123,26 @@ int main(int argc, char const *argv[]){
 			if (argc > 2){
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
 					printf("usage: todo show/print [--h] <command> [-v]\n\nDefault action is to show all todo items.\n\nList of commands:\n");
-					printf(" categories         Show all categories.\n");
-					printf(" by-category        Show todo items by category of [category_id].\n");
+					printf(" categories\t\tShow all categories.\n");
+					printf(" labels\t\t\tShow all labels.\n");
+					printf(" by-category\t\tShow todo items by category of [category_id].\n");
 					return 0;
 				} else if (strcmp(argv[2], "-v") == 0){
 					todoPrinter.printToDos(true);
 					return 0;
 				} else if (strcmp(argv[2], "categories") == 0){
 					todoPrinter.printCategories();
+					return 0;
+				} else if (strcmp(argv[2], "labels") == 0){
+					todoPrinter.printLabels();
+					return 0;
+				} else if (strcmp(argv[2], "label-colors") == 0){
+					printf("These are the colors that can be added to a label: \n");
+					for (std::map<std::string, LabelColor>::iterator labelColorItr = labelColorNames.begin(); labelColorItr != labelColorNames.end(); labelColorItr++){
+						if (labelColorItr != labelColorNames.begin()) printf(", ");
+						todoPrinter.printLabelColor(labelColorItr->second, labelColorItr->first.c_str());
+					}
+					printf("\n");
 					return 0;
 				} else if (strcmp(argv[2], "by-category") == 0){
 					if (argc > 3){
@@ -162,6 +183,23 @@ int main(int argc, char const *argv[]){
 					todoEngine.addCategory(cateNameStr);
 					printf("Category added!\n");
 					return 0;
+				} else if (strcmp(argv[2], "label") == 0){
+					if (argc <= 4) {
+						printf("ERROR: Please specify the color of the label.\n");
+						return -1;
+					}
+					LabelColor colorToAdd;
+					const char* colorArg = argv[4];
+					if (labelColorNames.count(colorArg)){ //if it returns at least one element, then it's a valid color
+						colorToAdd = labelColorNames[colorArg];
+					} else{
+						printf("ERROR: Not a valid color.\n");
+						return -1;
+					}
+					std::string labelNameStr = argv[3];
+					todoEngine.addLabel(labelNameStr, colorToAdd);
+					printf("Label added!\n");
+					return 0;
 				}
 				//Default add action is to add a todo item
 				ToDoItem item;
@@ -169,6 +207,7 @@ int main(int argc, char const *argv[]){
 				item.name = argv[2];
 				item.description = argv[3];
 				item.categoryID = 0; //will be assigned to first category automatically for now
+				item.labelID = -1;
 				item.completed = false;
 				todoEngine.addToDo(item);
 				printf("Todo item added.\n");
@@ -182,8 +221,9 @@ int main(int argc, char const *argv[]){
 				//If we are calling for help
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
 					printf("usage: todo add [--h] <command>\n\nList of commands:\n");
-					printf(" [name] [description]      Todo item's name and description respectively.\n");
-					printf(" category                  Add category dialog. Provide a subsequent argument for category name.\n");
+					printf(" [name] [description]\tTodo item's name and description respectively.\n");
+					printf(" category [name]\t\tAdd category dialog. (Optional) Provide a subsequent argument for category name.\n");
+					printf(" label [name] [color]\t\tAdd a label by providing its [name] and [color] as arguments.\n");
 					return 0;
 				//If we are adding a category rather than a todo item...
 				} else if (strcmp(argv[2], "category") == 0){
@@ -203,6 +243,7 @@ int main(int argc, char const *argv[]){
 					printf("usage: todo remove [--h] <command>\n\nList of commands:\n");
 					printf(" [index]\t\t\t\tIndex number of todo item to delete.\n");
 					printf(" category [category_id]\t\t\tRemove a category specified by [category_id].\n");
+					printf(" label [label_id]\t\t\tRemove a label specified by [label_id].\n");
 					printf(" all					Clear all todo items.\n");
 					return 0;
 				//If we are going to remove all todos...
@@ -226,6 +267,23 @@ int main(int argc, char const *argv[]){
 						return 0;
 					}
 					printf("ERROR: Please provide the ID number of the category to remove.\n");
+					return -1;
+				} else if (strcmp(argv[2], "label") == 0){
+					if (argc > 3){
+						char* pEnd;
+						int labelNum = strtol(argv[3], &pEnd, 0);
+						if (strcmp(pEnd, "\0") != 0){
+							printf("ERROR: Could not process ID number of the label to remove.");
+							return -1;
+						}
+						if (todoEngine.removeLabel(labelNum) == -1){
+							printf("ERROR: No label exists with ID of %i\n", labelNum);
+						} else{
+							printf("Label removed!\n");
+						}
+						return 0;
+					}
+					printf("ERROR: Please provide the ID number of the label to remove.\n");
 					return -1;
 				}
 				char* pEnd;

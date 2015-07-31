@@ -59,7 +59,7 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 			return;
 		}
 	}
-	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> toDoItrPair = m_toDoEngine->getToDoItemIterator();
+	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> toDoItrPair = m_toDoEngine->getItemIterator();
 	std::vector<ToDoItem>::iterator beginItr = toDoItrPair.first;
 	std::vector<ToDoItem>::iterator endItr = toDoItrPair.second;
 	if (_categoryID >= 0){
@@ -91,9 +91,14 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem){
 }
 
 void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
-#ifdef _WIN32
-	beginPrintPaint();
-#endif
+	ToDoLabel label;
+	bool hasLabel = true;
+	try{
+		label = m_toDoEngine->getLabel(_toDoItem.labelID);
+	} catch (int e){
+		label.color = -1; //give it fallback color value of -1
+		hasLabel = false;
+	}
 	char *nameTag = "", *descriptionTag = "";
 	if (_verbose){
 		nameTag = "Name: ";
@@ -104,13 +109,20 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 	if (_verbose){
 		printf("Category ID: %i\n", _toDoItem.categoryID);
 	}
+	if (hasLabel){
+		printf("Label: ");
 #ifdef _WIN32
-	endPrintPaint();
+		beginPrintPaint(label.color);
 #endif
+		printf("%s\n", label.name.c_str());
+#ifdef _WIN32
+		endPrintPaint();
+#endif
+	}
 }
 
 void TodoPrinter::printCategories(){
-	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> cateItrPair = m_toDoEngine->getToDoCategoryIterator();
+	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> cateItrPair = m_toDoEngine->getCategoryIterator();
 	std::vector<ToDoCategory>::iterator beginItr = cateItrPair.first;
 	std::vector<ToDoCategory>::iterator endItr = cateItrPair.second;
 	printf("======== Categories ===========\n");
@@ -120,9 +132,36 @@ void TodoPrinter::printCategories(){
 	printf("===============================\n");
 }
 
+void TodoPrinter::printLabels(){
+	std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> labelItrPair = m_toDoEngine->getLabelIterator();
+	std::vector<ToDoLabel>::iterator beginItr = labelItrPair.first;
+	std::vector<ToDoLabel>::iterator endItr = labelItrPair.second;
+	printf("======== Labels ===========\n");
+	for (std::vector<ToDoLabel>::iterator labelItr = beginItr; labelItr != endItr; labelItr++){
 #ifdef _WIN32
-void TodoPrinter::beginPrintPaint(){
-	SetConsoleTextAttribute(hstdout, colors[1]);
+		beginPrintPaint(labelItr->color);
+#endif
+		printf("[ID: %i] %s\n", labelItr->id, labelItr->name.c_str());
+#ifdef _WIN32
+		endPrintPaint();
+#endif
+	}
+	printf("===========================\n");
+}
+
+void TodoPrinter::printLabelColor(int _colorIndex, const char* _text){
+#ifdef _WIN32
+	beginPrintPaint(_colorIndex);
+#endif
+	printf("%s", _text);
+#ifdef _WIN32
+	endPrintPaint();
+#endif
+}
+
+#ifdef _WIN32
+void TodoPrinter::beginPrintPaint(int _colorIndex){
+	if (_colorIndex >= 0)	SetConsoleTextAttribute(hstdout, colors[_colorIndex]);
 }
 
 void TodoPrinter::endPrintPaint(){

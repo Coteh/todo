@@ -28,6 +28,15 @@ ToDoCategory Todo::getCategory(int _categoryID){
 	throw -1;
 }
 
+ToDoLabel Todo::getLabel(int _labelID){
+	for (std::vector<ToDoLabel>::iterator labelItr = m_labels.begin(); labelItr != m_labels.end(); labelItr++){
+		if (labelItr->id == _labelID){
+			return *labelItr;
+		}
+	}
+	throw -1;
+}
+
 void Todo::loadToDoFile(){
 	if (todoConfig == nullptr){
 		throw -2;
@@ -52,6 +61,8 @@ void Todo::loadToDoFile(){
 					toDoItem.id = todoItr->value.GetInt();
 				} else if (strcmp(todoItr->name.GetString(), "category_id") == 0 && todoItr->value.IsInt()){
 					toDoItem.categoryID = todoItr->value.GetInt();
+				} else if (strcmp(todoItr->name.GetString(), "label_id") == 0 && todoItr->value.IsInt()){
+					toDoItem.labelID = todoItr->value.GetInt();
 				} else if (strcmp(todoItr->name.GetString(), "completed") == 0 && todoItr->value.IsBool()){
 					toDoItem.completed = todoItr->value.GetBool();
 				}
@@ -68,6 +79,19 @@ void Todo::loadToDoFile(){
 				}
 			}
 			m_categories.push_back(category);
+		} else if (strcmp(memberItr->name.GetString(), "label") == 0){
+			ToDoLabel label;
+			rapidjson::Value *labelVal = &memberItr->value;
+			for (rapidjson::Value::MemberIterator labelItr = labelVal->MemberBegin(); labelItr != labelVal->MemberEnd(); ++labelItr) {
+				if (strcmp(labelItr->name.GetString(), "name") == 0 && labelItr->value.IsString()){
+					label.name = labelItr->value.GetString();
+				} else if (strcmp(labelItr->name.GetString(), "id") == 0 && labelItr->value.IsInt()){
+					label.id = labelItr->value.GetInt();
+				} else if (strcmp(labelItr->name.GetString(), "color") == 0 && labelItr->value.IsInt()){
+					label.color = labelItr->value.GetInt();
+				}
+			}
+			m_labels.push_back(label);
 		}
 	}
 }
@@ -87,6 +111,8 @@ void Todo::saveToDoFile(){
 		writer.Int(m_todoCollection[i].id);
 		writer.Key("category_id");
 		writer.Int(m_todoCollection[i].categoryID);
+		writer.Key("label_id");
+		writer.Int(m_todoCollection[i].labelID);
 		writer.Key("name");
 		writer.String(m_todoCollection[i].name.c_str());
 		writer.Key("description");
@@ -102,6 +128,17 @@ void Todo::saveToDoFile(){
 		writer.String(m_categories[i].name.c_str());
 		writer.Key("id");
 		writer.Int(m_categories[i].id);
+		writer.EndObject();
+	}
+	for (size_t i = 0; i < m_labels.size(); i++){
+		writer.Key("label");
+		writer.StartObject();
+		writer.Key("name");
+		writer.String(m_labels[i].name.c_str());
+		writer.Key("id");
+		writer.Int(m_labels[i].id);
+		writer.Key("color");
+		writer.Int(m_labels[i].color);
 		writer.EndObject();
 	}
 	writer.EndObject();
@@ -127,8 +164,21 @@ void Todo::addToDo(ToDoItem _toDoItem){
 void Todo::addCategory(std::string _name){
 	ToDoCategory categoryToAdd;
 	categoryToAdd.name = _name;
+	//TODO
+	//Assign ids in a better way
 	categoryToAdd.id = m_categories.size();
 	m_categories.push_back(categoryToAdd);
+	saveToDoFile();
+}
+
+void Todo::addLabel(std::string _name, LabelColor _labelColor){
+	ToDoLabel labelToAdd;
+	labelToAdd.name = _name;
+	labelToAdd.color = _labelColor;
+	//TODO
+	//Assign ids in a better way
+	labelToAdd.id = m_labels.size();
+	m_labels.push_back(labelToAdd);
 	saveToDoFile();
 }
 
@@ -167,6 +217,17 @@ int Todo::removeCategory(int _categoryID){
 	return -1;
 }
 
+int Todo::removeLabel(int _labelID){
+	for (std::vector<ToDoLabel>::iterator labelItr = m_labels.begin(); labelItr != m_labels.end(); labelItr++){
+		if (labelItr->id == _labelID){
+			m_labels.erase(labelItr);
+			saveToDoFile();
+			return 0;
+		}
+	}
+	return -1;
+}
+
 void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
 	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
 		throw -1;
@@ -183,10 +244,14 @@ void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
 	saveToDoFile();
 }
 
-std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> Todo::getToDoItemIterator(){
+std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> Todo::getItemIterator(){
 	return std::make_pair(m_todoCollection.begin(), m_todoCollection.end());
 }
 
-std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> Todo::getToDoCategoryIterator(){
+std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> Todo::getCategoryIterator(){
 	return std::make_pair(m_categories.begin(), m_categories.end());
+}
+
+std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> Todo::getLabelIterator(){
+	return std::make_pair(m_labels.begin(), m_labels.end());
 }
