@@ -21,7 +21,7 @@ struct ToDoLabel {
 	int id;
 };
 
-enum LabelColor {
+enum LabelColor : unsigned int {
 	WHITE = 0,
 	GREEN = 1,
 	MAGENTA = 2,

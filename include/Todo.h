@@ -5,7 +5,7 @@
 struct ToDoItem;
 struct ToDoCategory;
 struct ToDoLabel;
-enum LabelColor;
+enum LabelColor : unsigned int;
 
 class TodoConfig;
 
