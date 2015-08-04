@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 # initial setup
-SET(appName todo)
+SET(appName todotester)
 project(${appName})
 
 # checking for C++11/C++0x support
@@ -19,15 +19,11 @@ endif()
 
 # include directories
 include_directories(${todo_SOURCE_DIR}/include)
-set(RAPIDJSON_INCLUDE "~/Development_libs/rapidjson/include" CACHE FILEPATH "Include directory for rapidjson")
+include_directories(${todotester_SOURCE_DIR}/include)
 include_directories(${RAPIDJSON_INCLUDE})
 
 # add definitions
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-add_executable(${appName} src/main.cpp include/DataTypes.h include/Todo.h src/Todo.cpp include/FileIO.h
-src/FileIO.cpp include/Helpers.h src/Helpers.cpp include/TodoConfig.h src/TodoConfig.cpp include/TodoPrinter.h src/TodoPrinter.cpp)
-
-add_subdirectory(test)
+add_executable(${appName} src/main.cpp include/TodoTest.h src/TodoTest.cpp)
