@@ -15,13 +15,13 @@ std::map<std::string, LabelColor> labelColorNames;
 void addToDoDialog(){
 	char thing[100];
 	ToDoItem itemToAdd;
-	itemToAdd.id = 0;
+	itemToAdd.setID(0);
 	printf("Provide a name for todo list item.\n");
 	get_line(thing, 100);
-	itemToAdd.name = thing;
+	itemToAdd.toDoItemInfo.name = thing;
 	printf("Provide a description for todo list item\n");
 	get_line(thing, 100);
-	itemToAdd.description = thing;
+	itemToAdd.toDoItemInfo.description = thing;
 	//The only way to assign a category to a todo item right now
 	printf("Provide the category id this item will be categorized in:\n");
 	int cateID = 0;
@@ -30,8 +30,7 @@ void addToDoDialog(){
 #else
 	scanf("%i", &cateID);
 #endif
-	itemToAdd.categoryID = cateID;
-	itemToAdd.labelID = -1;
+	itemToAdd.setCategoryID(cateID);
 	itemToAdd.completed = false;
 	todoEngine.addToDo(itemToAdd);
 	todoPrinter.printToDos();
@@ -204,11 +203,10 @@ int main(int argc, char const *argv[]){
 				}
 				//Default add action is to add a todo item
 				ToDoItem item;
-				item.id = 0;
-				item.name = argv[2];
-				item.description = argv[3];
-				item.categoryID = 0; //will be assigned to first category automatically for now
-				item.labelID = -1;
+				item.setID(0);
+				item.toDoItemInfo.name = argv[2];
+				item.toDoItemInfo.description = argv[3];
+				item.setCategoryID(0); //will be assigned to first category automatically for now
 				item.completed = false;
 				todoEngine.addToDo(item);
 				printf("Todo item added.\n");

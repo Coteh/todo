@@ -2,7 +2,6 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": -1,
         "name": "Category ID",
         "description": "Add category ID option for todo items when performing todo add [name] [description]",
         "completed": false
@@ -10,7 +9,6 @@
     "todo": {
         "id": 0,
         "category_id": 1,
-        "label_id": -1,
         "name": "Label Colors",
         "description": "Add labels to todo items, trello style!",
         "completed": true
@@ -18,7 +16,6 @@
     "todo": {
         "id": 0,
         "category_id": 1,
-        "label_id": -1,
         "name": "Checklist",
         "description": "Ability to check off todo items you have completed.",
         "completed": true
@@ -26,7 +23,7 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": 1,
+        "label_ids": [1],
         "name": "On Error Parsing JSON Database...",
         "description": "Ask the user if they would like to generate a new file instead of automatically making one.",
         "completed": false
@@ -34,7 +31,6 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": -1,
         "name": "Todo Class Prints",
         "description": "Reduce the amount of print statements in Todo class methods.",
         "completed": false
@@ -42,7 +38,6 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": -1,
         "name": "set command",
         "description": "Set a category ID for todo item, etc.",
         "completed": true
@@ -50,7 +45,6 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": -1,
         "name": "Todo Exception Handling",
         "description": "Add better exception checking. Perhaps add in std::exception types?",
         "completed": false
@@ -58,7 +52,6 @@
     "todo": {
         "id": 0,
         "category_id": 1,
-        "label_id": -1,
         "name": "Configure Loaded File",
         "description": "Change the current todo.list file being read, etc.",
         "completed": true
@@ -66,7 +59,6 @@
     "todo": {
         "id": 0,
         "category_id": 1,
-        "label_id": -1,
         "name": "Label Colors (Part 2)",
         "description": "Display colors on the command line corresponding to the label colors.",
         "completed": true
@@ -74,7 +66,7 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": 1,
+        "label_ids": [1],
         "name": "Reduce Code Duplication in main.cpp",
         "description": "Reduce code duplication by reorganizing command checks.",
         "completed": false
@@ -82,10 +74,10 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_id": 2,
+        "label_ids": [2, 1],
         "name": "Multi-Labels",
         "description": "Give todo items the ability to have more than one label.",
-        "completed": false
+        "completed": true
     },
     "category": {
         "name": "Function",

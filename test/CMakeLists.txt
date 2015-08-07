@@ -27,3 +27,4 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
 add_executable(${appName} src/main.cpp include/TodoTest.h src/TodoTest.cpp)
+target_link_libraries(${appName} todo_lib)

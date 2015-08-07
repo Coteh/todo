@@ -1,13 +1,60 @@
 #pragma once
 #include <string>
+#include <forward_list>
 
-struct ToDoItem {
+struct ToDoItemInfo {
 	std::string name;
 	std::string description;
-	int id; //currently unused
-	int categoryID;
-	int labelID;
+};
+
+class ToDoItem {
+public:
+	ToDoItemInfo toDoItemInfo;
+	inline int getID() const {
+		return id;
+	}
+	inline int getCategoryID() const {
+		return categoryID;
+	}
+	inline bool hasLabels() const {
+		return !labelIDs.empty();
+	}
+	inline std::forward_list<int>::iterator labelsBegin(){
+		return labelIDs.begin();
+	}
+	inline const std::forward_list<int>::const_iterator clabelsBegin() const{
+		return labelIDs.cbegin();
+	}
+	inline std::forward_list<int>::iterator labelsEnd(){
+		return labelIDs.end();
+	}
+	inline const std::forward_list<int>::const_iterator clabelsEnd() const{
+		return labelIDs.cend();
+	}
+	inline void setID(int _id){
+		id = _id;
+	}
+	inline void setCategoryID(int _categoryID){
+		categoryID = _categoryID;
+	}
+	inline void addLabelID(int _labelID){
+		labelIDs.insert_after(labelIDs.before_begin(), _labelID);
+	}
+	inline void removeLabelID(int _labelID){
+		std::forward_list<int>::iterator prevItr = labelIDs.before_begin();
+		for (std::forward_list<int>::iterator labelsItr = labelIDs.begin(); labelsItr != labelIDs.end(); labelsItr++){
+			if (*labelsItr == _labelID){
+				labelIDs.erase_after(prevItr);
+				return;
+			}
+			prevItr = labelsItr;
+		}
+	}
 	bool completed;
+private:
+	int id;
+	int categoryID;
+	std::forward_list<int> labelIDs;
 };
 
 struct ToDoCategory {

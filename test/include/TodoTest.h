@@ -17,4 +17,6 @@ private:
 	void firstTest();
 	void printSingleItem();
 	void addAndPrint();
+	void addLabel(std::string _labelName, LabelColor _labelColor);
+	void printItemWithLabel(int _labelIDs, ...);
 };

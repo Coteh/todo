@@ -54,15 +54,18 @@ void Todo::loadToDoFile(){
 			rapidjson::Value *todoVal = &memberItr->value;
 			for (rapidjson::Value::MemberIterator todoItr = todoVal->MemberBegin(); todoItr != todoVal->MemberEnd(); ++todoItr) {
 				if (strcmp(todoItr->name.GetString(), "name") == 0 && todoItr->value.IsString()){
-					toDoItem.name = todoItr->value.GetString();
+					toDoItem.toDoItemInfo.name = todoItr->value.GetString();
 				} else if (strcmp(todoItr->name.GetString(), "description") == 0 && todoItr->value.IsString()){
-					toDoItem.description = todoItr->value.GetString();
+					toDoItem.toDoItemInfo.description = todoItr->value.GetString();
 				} else if (strcmp(todoItr->name.GetString(), "id") == 0 && todoItr->value.IsInt()){
-					toDoItem.id = todoItr->value.GetInt();
+					toDoItem.setID(todoItr->value.GetInt());
 				} else if (strcmp(todoItr->name.GetString(), "category_id") == 0 && todoItr->value.IsInt()){
-					toDoItem.categoryID = todoItr->value.GetInt();
-				} else if (strcmp(todoItr->name.GetString(), "label_id") == 0 && todoItr->value.IsInt()){
-					toDoItem.labelID = todoItr->value.GetInt();
+					toDoItem.setCategoryID(todoItr->value.GetInt());
+				} else if (strcmp(todoItr->name.GetString(), "label_ids") == 0 && todoItr->value.IsArray()){
+					rapidjson::Value *arrVal = &todoItr->value;
+					for (rapidjson::Value::ConstValueIterator arrItr = arrVal->Begin(); arrItr != arrVal->End(); ++arrItr){
+						toDoItem.addLabelID(arrItr->GetInt());
+					}
 				} else if (strcmp(todoItr->name.GetString(), "completed") == 0 && todoItr->value.IsBool()){
 					toDoItem.completed = todoItr->value.GetBool();
 				}
@@ -108,15 +111,21 @@ void Todo::saveToDoFile(){
 		writer.Key("todo");
 		writer.StartObject();
 		writer.Key("id");
-		writer.Int(m_todoCollection[i].id);
+		writer.Int(m_todoCollection[i].getID());
 		writer.Key("category_id");
-		writer.Int(m_todoCollection[i].categoryID);
-		writer.Key("label_id");
-		writer.Int(m_todoCollection[i].labelID);
+		writer.Int(m_todoCollection[i].getCategoryID());
+		if (m_todoCollection[i].hasLabels()){
+			writer.Key("label_ids");
+			writer.StartArray();
+			for (std::forward_list<int>::iterator labelItr = m_todoCollection[i].labelsBegin(); labelItr != m_todoCollection[i].labelsEnd(); ++labelItr){
+				writer.Int(*labelItr);
+			}
+			writer.EndArray();
+		}
 		writer.Key("name");
-		writer.String(m_todoCollection[i].name.c_str());
+		writer.String(m_todoCollection[i].toDoItemInfo.name.c_str());
 		writer.Key("description");
-		writer.String(m_todoCollection[i].description.c_str());
+		writer.String(m_todoCollection[i].toDoItemInfo.description.c_str());
 		writer.Key("completed");
 		writer.Bool(m_todoCollection[i].completed);
 		writer.EndObject();
@@ -232,7 +241,7 @@ void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
 	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
 		throw -1;
 	}
-	m_todoCollection[_toDoIndex].categoryID = _categoryID;
+	m_todoCollection[_toDoIndex].setCategoryID(_categoryID);
 	saveToDoFile();
 }
 

@@ -27,7 +27,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-add_executable(${appName} src/main.cpp include/DataTypes.h include/Todo.h src/Todo.cpp include/FileIO.h
+add_library(${appName}_lib STATIC include/DataTypes.h include/Todo.h src/Todo.cpp include/FileIO.h
 src/FileIO.cpp include/Helpers.h src/Helpers.cpp include/TodoConfig.h src/TodoConfig.cpp include/TodoPrinter.h src/TodoPrinter.cpp)
+add_executable(${appName} src/main.cpp)
+target_link_libraries(${appName} ${appName}_lib)
 
 add_subdirectory(test)

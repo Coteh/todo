@@ -13,6 +13,9 @@ void TodoTest::runTests(){
 	firstTest();
 	printSingleItem();
 	addAndPrint();
+	addLabel("Test Label", LabelColor::RED);
+	addLabel("Test Label 2", LabelColor::MAGENTA);
+	printItemWithLabel(0, 1, -1);
 	displayResults();
 }
 
@@ -27,7 +30,7 @@ void TodoTest::firstTest(){
 	printf("-----------------------\n");
 	try{
 		ToDoItem toDoItem;
-		toDoItem.name = "Testing Add a Todo item to collection";
+		toDoItem.toDoItemInfo.name = "Testing Add a Todo item to collection";
 		m_toDoTestEngine.addToDo(toDoItem);
 	} catch (int e){
 		printf("Test failed!\n");
@@ -35,7 +38,6 @@ void TodoTest::firstTest(){
 	}
 	passes++;
 	printf("Test succeeded!\n");
-	return;
 }
 
 void TodoTest::printSingleItem(){
@@ -45,7 +47,7 @@ void TodoTest::printSingleItem(){
 	printf("-----------------------\n");
 	try{
 		ToDoItem toDoItem;
-		toDoItem.name = "Testing Print Single Todo item";
+		toDoItem.toDoItemInfo.name = "Testing Print Single Todo item";
 		m_toDoTestPrinter.printToDoItem(toDoItem);
 	} catch (int e){
 		printf("Test failed!\n");
@@ -53,7 +55,6 @@ void TodoTest::printSingleItem(){
 	}
 	passes++;
 	printf("Test succeeded!\n");
-	return;
 }
 
 void TodoTest::addAndPrint(){
@@ -63,7 +64,7 @@ void TodoTest::addAndPrint(){
 	printf("-----------------------\n");
 	try{
 		ToDoItem toDoItem;
-		toDoItem.name = "Testing Add n' Print";
+		toDoItem.toDoItemInfo.name = "Testing Add n' Print";
 		m_toDoTestEngine.addToDo(toDoItem);
 		m_toDoTestPrinter.printToDos();
 	} catch (int e){
@@ -72,5 +73,42 @@ void TodoTest::addAndPrint(){
 	}
 	passes++;
 	printf("Test succeeded!\n");
-	return;
+}
+
+void TodoTest::addLabel(std::string _labelName, LabelColor _labelColor){
+	testsRun++;
+	printf("-----------------------\n");
+	printf("Test: Adding a label\n");
+	printf("-----------------------\n");
+	try{
+		m_toDoTestEngine.addLabel(_labelName, _labelColor);
+		m_toDoTestPrinter.printLabels();
+	} catch (int e){
+		printf("Test failed!\n");
+		return;
+	}
+	passes++;
+	printf("Test succeeded!\n");
+}
+
+void TodoTest::printItemWithLabel(int _labelIDs, ...){
+	testsRun++;
+	printf("-----------------------\n");
+	printf("Test: Printing an item with a label\n");
+	printf("-----------------------\n");
+	try{
+		ToDoItem toDoItem;
+		toDoItem.toDoItemInfo.name = "Testing Print Single Todo item with labels";
+		va_list labelsArgList;
+		for (va_start(labelsArgList, _labelIDs); _labelIDs != -1; _labelIDs = va_arg(labelsArgList, int)){
+			toDoItem.addLabelID(_labelIDs);
+		}
+		va_end(labelsArgList);
+		m_toDoTestPrinter.printToDoItem(toDoItem);
+	} catch (int e){
+		printf("Test failed!\n");
+		return;
+	}
+	passes++;
+	printf("Test succeeded!\n");
 }

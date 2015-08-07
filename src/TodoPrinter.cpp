@@ -70,7 +70,7 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 	int i = 0, shownAmt = 0;
 	for (std::vector<ToDoItem>::iterator toDoItr = beginItr; toDoItr != endItr; toDoItr++){
 		i++;
-		if ((_categoryID >= 0 && toDoItr->categoryID != category.id) || 
+		if ((_categoryID >= 0 && toDoItr->getCategoryID() != category.id) || 
 			(_showType == PrintShowType::NONE || ((_showType != PrintShowType::ALL)
 				&& ((toDoItr->completed && _showType != PrintShowType::COMPLETE) || 
 				(!toDoItr->completed && _showType != PrintShowType::INCOMPLETE))))) continue;
@@ -91,33 +91,38 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem){
 }
 
 void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
-	ToDoLabel label;
-	bool hasLabel = true;
-	try{
-		label = m_toDoEngine->getLabel(_toDoItem.labelID);
-	} catch (int e){
-		label.color = -1; //give it fallback color value of -1
-		hasLabel = false;
-	}
+	bool hasLabel = _toDoItem.hasLabels();
 	char *nameTag = "", *descriptionTag = "";
 	if (_verbose){
 		nameTag = "Name: ";
 		descriptionTag = "Description: ";
 	}
-	printf("[%s] %s%s\n", (_toDoItem.completed) ? "X" : " ", nameTag, _toDoItem.name.c_str());
-	printf("%s%s\n", descriptionTag, _toDoItem.description.c_str());
+	printf("[%s] %s%s\n", (_toDoItem.completed) ? "X" : " ", nameTag, _toDoItem.toDoItemInfo.name.c_str());
+	printf("%s%s\n", descriptionTag, _toDoItem.toDoItemInfo.description.c_str());
 	if (_verbose){
-		printf("Category ID: %i\n", _toDoItem.categoryID);
+		printf("Category ID: %i\n", _toDoItem.getCategoryID());
 	}
 	if (hasLabel){
-		printf("Label: ");
+		printf("Label(s): ");
+		for (std::forward_list<int>::const_iterator labelItr = _toDoItem.clabelsBegin(); labelItr != _toDoItem.clabelsEnd(); ++labelItr){
+			if (labelItr != _toDoItem.clabelsBegin()){
+				printf(", ");
+			}
+			ToDoLabel label;
+			try{
+				label = m_toDoEngine->getLabel(*labelItr);
+			} catch (int e){
+				label.color = -1; //give it fallback color value of -1
+			}
 #ifdef _WIN32
-		beginPrintPaint(label.color);
+			beginPrintPaint(label.color);
 #endif
-		printf("%s\n", label.name.c_str());
+			printf("%s", label.name.c_str());
 #ifdef _WIN32
-		endPrintPaint();
+			endPrintPaint();
 #endif
+		}
+		printf("\n");
 	}
 }
 
