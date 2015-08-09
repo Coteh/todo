@@ -332,6 +332,8 @@ int main(int argc, char const *argv[]){
 						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "--h") == 0){
 							printf("usage: todo set todo %i [--h] <command>\n\nList of commands:\n", indexNum);
 							printf(" category [category_id]\t\t\tSwitch todo item's category to a category of [category_id].\n");
+							printf(" label add [label_id]\t\t\tAdd a label of ID [label_id] to todo item.\n");
+							printf(" label remove [label_id]\t\tRemove a label of ID [label_id] from todo item.\n");
 							printf(" mark/unmark\t\t\t\tCheck/uncheck todo item.\n");
 							return 0;
 						} else if (strcmp(argv[4], "category") == 0){
