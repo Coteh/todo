@@ -23,7 +23,9 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_ids": [1],
+        "label_ids": [
+            1
+        ],
         "name": "On Error Parsing JSON Database...",
         "description": "Ask the user if they would like to generate a new file instead of automatically making one.",
         "completed": false
@@ -66,7 +68,10 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_ids": [1],
+        "label_ids": [
+            2,
+            1
+        ],
         "name": "Reduce Code Duplication in main.cpp",
         "description": "Reduce code duplication by reorganizing command checks.",
         "completed": false
@@ -74,7 +79,10 @@
     "todo": {
         "id": 0,
         "category_id": 0,
-        "label_ids": [2, 1],
+        "label_ids": [
+            1,
+            2
+        ],
         "name": "Multi-Labels",
         "description": "Give todo items the ability to have more than one label.",
         "completed": true

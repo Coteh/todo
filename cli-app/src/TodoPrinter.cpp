@@ -1,5 +1,5 @@
 #include "TodoPrinter.h"
-#include "Todo.h"
+#include "TodoApp.h"
 #include "DataTypes.h"
 
 #ifdef _WIN32
@@ -8,7 +8,7 @@ const WORD TodoPrinter::colors[] = {
 };
 #endif
 
-TodoPrinter::TodoPrinter(Todo* _todoEngine) {
+TodoPrinter::TodoPrinter(TodoApp* _todoEngine) {
 	m_toDoEngine = _todoEngine;
 
 #ifdef _WIN32

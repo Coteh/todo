@@ -4,7 +4,7 @@
 #include <windows.h>
 #endif
 
-class Todo;
+class TodoApp;
 struct ToDoItem;
 
 enum PrintShowType {
@@ -16,7 +16,7 @@ enum PrintShowType {
 
 class TodoPrinter {
 public:
-	TodoPrinter(Todo* _todoEngine);
+	TodoPrinter(TodoApp* _todoEngine);
 	TodoPrinter();
 	~TodoPrinter();
 
@@ -32,7 +32,7 @@ public:
 	void printLabels();
 	void printLabelColor(int _colorIndex, const char* _text);
 private:
-	Todo* m_toDoEngine;
+	TodoApp* m_toDoEngine;
 #ifdef _WIN32
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hstdout;

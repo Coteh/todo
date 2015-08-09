@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 # initial setup
-SET(appName todotester)
+SET(appName todo_tester)
 project(${appName})
 
 # checking for C++11/C++0x support
@@ -19,7 +19,8 @@ endif()
 
 # include directories
 include_directories(${todo_SOURCE_DIR}/include)
-include_directories(${todotester_SOURCE_DIR}/include)
+include_directories(${todo-cli-app_SOURCE_DIR}/include)
+include_directories(${todo_tester_SOURCE_DIR}/include)
 include_directories(${RAPIDJSON_INCLUDE})
 
 # add definitions
@@ -28,3 +29,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 # add targets
 add_executable(${appName} src/main.cpp include/TodoTest.h src/TodoTest.cpp)
 target_link_libraries(${appName} todo_lib)
+
+if(TODO_BUILD_CLIAPP)
+target_link_libraries(${appName} todo_cli_lib)
+endif()

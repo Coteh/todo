@@ -1,4 +1,4 @@
-#include "Todo.h"
+#include "TodoApp.h"
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "FileIO.h"
@@ -7,19 +7,19 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
-Todo::Todo() {
+TodoApp::TodoApp() {
 	todoConfig = new TodoConfig();
 }
 
-Todo::~Todo() {
+TodoApp::~TodoApp() {
 	delete todoConfig;
 }
 
-int Todo::getTodoCount(){
+int TodoApp::getTodoCount(){
 	return m_todoCollection.size();
 }
 
-ToDoCategory Todo::getCategory(int _categoryID){
+ToDoCategory TodoApp::getCategory(int _categoryID){
 	for (size_t i = 0; i < m_categories.size(); i++){
 		if (m_categories[i].id == _categoryID){
 			return m_categories[i];
@@ -28,8 +28,8 @@ ToDoCategory Todo::getCategory(int _categoryID){
 	throw -1;
 }
 
-ToDoLabel Todo::getLabel(int _labelID){
-	for (std::vector<ToDoLabel>::iterator labelItr = m_labels.begin(); labelItr != m_labels.end(); labelItr++){
+ToDoLabel TodoApp::getLabel(int _labelID){
+	for (std::vector<ToDoLabel>::iterator labelItr = m_labels.begin(); labelItr != m_labels.end(); ++labelItr){
 		if (labelItr->id == _labelID){
 			return *labelItr;
 		}
@@ -37,7 +37,7 @@ ToDoLabel Todo::getLabel(int _labelID){
 	throw -1;
 }
 
-void Todo::loadToDoFile(){
+void TodoApp::loadToDoFile(){
 	if (todoConfig == nullptr){
 		throw -2;
 	}
@@ -99,7 +99,7 @@ void Todo::loadToDoFile(){
 	}
 }
 
-void Todo::saveToDoFile(){
+void TodoApp::saveToDoFile(){
 	if (todoConfig == nullptr){
 		throw -2;
 	}
@@ -155,7 +155,7 @@ void Todo::saveToDoFile(){
 	FileIO::writeFile(todoConfig->getToDoFilePath(), sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
-void Todo::createNewToDoFile(std::string _filePath){
+void TodoApp::createNewToDoFile(std::string _filePath){
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
@@ -165,12 +165,12 @@ void Todo::createNewToDoFile(std::string _filePath){
 	FileIO::writeFile(_filePath, sb.GetString(), FileIO::FileWriteType::WRITE);
 }
 
-void Todo::addToDo(ToDoItem _toDoItem){
+void TodoApp::addToDo(ToDoItem _toDoItem){
 	m_todoCollection.push_back(_toDoItem);
 	saveToDoFile();
 }
 
-void Todo::addCategory(std::string _name){
+void TodoApp::addCategory(std::string _name){
 	ToDoCategory categoryToAdd;
 	categoryToAdd.name = _name;
 	//TODO
@@ -180,7 +180,7 @@ void Todo::addCategory(std::string _name){
 	saveToDoFile();
 }
 
-void Todo::addLabel(std::string _name, LabelColor _labelColor){
+void TodoApp::addLabel(std::string _name, LabelColor _labelColor){
 	ToDoLabel labelToAdd;
 	labelToAdd.name = _name;
 	labelToAdd.color = _labelColor;
@@ -191,7 +191,7 @@ void Todo::addLabel(std::string _name, LabelColor _labelColor){
 	saveToDoFile();
 }
 
-void Todo::removeToDoByIndex(int _index){
+void TodoApp::removeToDoByIndex(int _index){
 	if (_index < 0 || _index >= m_todoCollection.size()){
 		throw -1;
 	}
@@ -199,12 +199,12 @@ void Todo::removeToDoByIndex(int _index){
 	saveToDoFile();
 }
 
-void Todo::removeAllToDos(){
+void TodoApp::removeAllToDos(){
 	m_todoCollection.clear();
 	saveToDoFile();
 }
 
-int Todo::removeCategory(int _categoryID){
+int TodoApp::removeCategory(int _categoryID){
 	ToDoCategory category;
 	try{
 		category = getCategory(_categoryID);
@@ -226,7 +226,7 @@ int Todo::removeCategory(int _categoryID){
 	return -1;
 }
 
-int Todo::removeLabel(int _labelID){
+int TodoApp::removeLabel(int _labelID){
 	for (std::vector<ToDoLabel>::iterator labelItr = m_labels.begin(); labelItr != m_labels.end(); labelItr++){
 		if (labelItr->id == _labelID){
 			m_labels.erase(labelItr);
@@ -237,7 +237,7 @@ int Todo::removeLabel(int _labelID){
 	return -1;
 }
 
-void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
+void TodoApp::setToDoToCategory(int _toDoIndex, int _categoryID){
 	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
 		throw -1;
 	}
@@ -245,7 +245,7 @@ void Todo::setToDoToCategory(int _toDoIndex, int _categoryID){
 	saveToDoFile();
 }
 
-void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
+void TodoApp::markToDoCompleted(int _toDoIndex, bool _completed){
 	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
 		throw -1;
 	}
@@ -253,14 +253,30 @@ void Todo::markToDoCompleted(int _toDoIndex, bool _completed){
 	saveToDoFile();
 }
 
-std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> Todo::getItemIterator(){
+void TodoApp::appendLabelToToDo(int _toDoIndex, int _labelID){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
+		throw - 1;
+	}
+	m_todoCollection[_toDoIndex].addLabelID(_labelID);
+	saveToDoFile();
+}
+
+void TodoApp::eraseLabelFromToDo(int _toDoIndex, int _labelID){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todoCollection.size()){
+		throw - 1;
+	}
+	m_todoCollection[_toDoIndex].removeLabelID(_labelID);
+	saveToDoFile();
+}
+
+std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> TodoApp::getItemIterator(){
 	return std::make_pair(m_todoCollection.begin(), m_todoCollection.end());
 }
 
-std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> Todo::getCategoryIterator(){
+std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> TodoApp::getCategoryIterator(){
 	return std::make_pair(m_categories.begin(), m_categories.end());
 }
 
-std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> Todo::getLabelIterator(){
+std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> TodoApp::getLabelIterator(){
 	return std::make_pair(m_labels.begin(), m_labels.end());
 }

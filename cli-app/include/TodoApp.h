@@ -9,10 +9,10 @@ enum LabelColor : unsigned int;
 
 class TodoConfig;
 
-class Todo {
+class TodoApp {
 public:
-	Todo();
-	~Todo();
+	TodoApp();
+	~TodoApp();
 
 	int getTodoCount();
 	ToDoCategory getCategory(int _categoryID);
@@ -32,6 +32,8 @@ public:
 
 	void setToDoToCategory(int _toDoIndex, int _categoryID);
 	void markToDoCompleted(int _toDoIndex, bool _completed);
+	void appendLabelToToDo(int _toDoIndex, int _labelID);
+	void eraseLabelFromToDo(int _toDoIndex, int _labelID);
 
 	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> getItemIterator();
 	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> getCategoryIterator();

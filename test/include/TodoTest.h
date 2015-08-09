@@ -1,5 +1,5 @@
 #pragma once
-#include "Todo.h"
+#include "TodoApp.h"
 #include "TodoPrinter.h"
 
 class TodoTest {
@@ -10,7 +10,7 @@ public:
 	void runTests();
 	void displayResults();
 private:
-    Todo m_toDoTestEngine;
+    TodoApp m_toDoTestEngine;
 	TodoPrinter m_toDoTestPrinter;
 	int testsRun, passes;
 

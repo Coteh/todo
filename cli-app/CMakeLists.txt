@@ -5,10 +5,6 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 SET(appName todo)
 project(${appName})
 
-# build options
-option(TODO_BUILD_CLIAPP "Build todo command line interface app." ON)
-option(TODO_BUILD_TESTS "Build todo unit tests." ON)
-
 # checking for C++11/C++0x support
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -23,20 +19,15 @@ endif()
 
 # include directories
 include_directories(${todo_SOURCE_DIR}/include)
-set(RAPIDJSON_INCLUDE "~/Development_libs/rapidjson/include" CACHE FILEPATH "Include directory for rapidjson")
+include_directories(${todo-cli-app_SOURCE_DIR}/include)
 include_directories(${RAPIDJSON_INCLUDE})
 
 # add definitions
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-add_library(${appName}_lib STATIC include/DataTypes.h include/FileIO.h src/FileIO.cpp
-include/TodoConfig.h src/TodoConfig.cpp include/Helpers.h src/Helpers.cpp)
-
-if(TODO_BUILD_CLIAPP)
-add_subdirectory(cli-app)
-endif()
-if(TODO_BUILD_TESTS)
-  add_subdirectory(test)
-endif()
+add_library(${appName}_cli_lib STATIC include/TodoApp.h src/TodoApp.cpp
+include/TodoPrinter.h src/TodoPrinter.cpp include/CLIHelpers.h src/CLIHelpers.cpp)
+add_executable(${appName} src/main.cpp)
+target_link_libraries(${appName} ${appName}_cli_lib)
+target_link_libraries(${appName}_cli_lib todo_lib)

@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <map>
-#include "Todo.h"
+#include "TodoApp.h"
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "Helpers.h"
+#include "CLIHelpers.h"
 #include "TodoPrinter.h"
 
-Todo todoEngine;
+TodoApp todoEngine;
 TodoPrinter todoPrinter;
 std::map<std::string, LabelColor> labelColorNames;
 
@@ -371,6 +372,38 @@ int main(int argc, char const *argv[]){
 							}
 							printf("ToDo item has been unmarked.\n");
 							return 0;
+						} else if (strcmp(argv[4], "label") == 0){
+							if (argc > 5){
+								if (strcmp(argv[5], "add") == 0){
+									if (argc <= 6){
+										printf("ERROR: Please provide a label ID to add to this item.\n");
+										return -1;
+									}
+									char* pEnd;
+									int labelNum = strtol(argv[6], &pEnd, 0);
+									if (strcmp(pEnd, "\0") != 0){
+										printf("ERROR: Could not process ID number of the label to add.");
+										return -1;
+									}
+									todoEngine.appendLabelToToDo(indexNum - 1, labelNum);
+									printf("Label added to ToDo item!\n");
+									return 0;
+								} else if (strcmp(argv[5], "remove") == 0){
+									if (argc <= 6){
+										printf("ERROR: Please provide a label ID to remove from this item.\n");
+										return -1;
+									}
+									char* pEnd;
+									int labelNum = strtol(argv[6], &pEnd, 0);
+									if (strcmp(pEnd, "\0") != 0){
+										printf("ERROR: Could not process ID number of the label to remove.");
+										return -1;
+									}
+									todoEngine.eraseLabelFromToDo(indexNum - 1, labelNum);
+									printf("Label removed from ToDo item!\n");
+									return 0;
+								}
+							}
 						}
 					}
 				}
