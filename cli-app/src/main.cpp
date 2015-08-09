@@ -105,6 +105,10 @@ void init(){
 	labelColorNames["magenta"] = LabelColor::MAGENTA;
 	labelColorNames["yellow"] = LabelColor::YELLOW;
 	labelColorNames["red"] = LabelColor::RED;
+	labelColorNames["blue"] = LabelColor::BLUE;
+	labelColorNames["cyan"] = LabelColor::CYAN;
+	labelColorNames["teal"] = LabelColor::TEAL;
+	labelColorNames["crimson"] = LabelColor::CRIMSON;
 }
 
 int main(int argc, char const *argv[]){

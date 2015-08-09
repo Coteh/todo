@@ -73,5 +73,9 @@ enum LabelColor : unsigned int {
 	GREEN = 1,
 	MAGENTA = 2,
 	YELLOW = 3,
-	RED = 4
+	RED = 4,
+	BLUE = 5,
+	CYAN = 6,
+	TEAL = 7,
+	CRIMSON = 8
 };
