@@ -1,24 +1,18 @@
 #include "TodoConfig.h"
-#include "FileIO.h"
-#include "Helpers.h" //getProjectDirectory
 
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
-#define CONFIG_FILENAME "config.json"
-
 TodoConfig::TodoConfig() {
-	m_programFilePath = getProjectDirectory();
 }
 
 TodoConfig::~TodoConfig() {
 }
 
-void TodoConfig::loadConfigFile(){
-	std::string fileContents = FileIO::readFile(m_programFilePath + FOLDER_DELIM + CONFIG_FILENAME);
+void TodoConfig::processConfig(std::string _configContents){
 	rapidjson::Document doc;
-	doc.Parse(fileContents.c_str());
+	doc.Parse(_configContents.c_str());
 	if (doc.HasParseError()){
 		throw -1;
 	}
@@ -31,7 +25,7 @@ void TodoConfig::loadConfigFile(){
 	}
 }
 
-void TodoConfig::saveConfigFile(){
+std::string TodoConfig::writeConfig(){
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
@@ -40,17 +34,7 @@ void TodoConfig::saveConfigFile(){
 	writer.String(m_toDoFilePath.c_str());
 	writer.EndObject();
 
-	FileIO::writeFile(m_programFilePath + FOLDER_DELIM + CONFIG_FILENAME, sb.GetString(), FileIO::FileWriteType::WRITE);
-}
-
-void TodoConfig::createNewConfigFile(){
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-
-	writer.StartObject();
-	writer.EndObject();
-
-	FileIO::writeFile(m_programFilePath + FOLDER_DELIM + CONFIG_FILENAME, sb.GetString(), FileIO::FileWriteType::WRITE);
+	return sb.GetString();
 }
 
 void TodoConfig::setToDoFilePath(std::string _filePath){

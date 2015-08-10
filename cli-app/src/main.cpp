@@ -6,7 +6,6 @@
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "Helpers.h"
-#include "CLIHelpers.h"
 #include "TodoPrinter.h"
 
 TodoApp todoEngine;
@@ -60,44 +59,6 @@ void removeToDoDialog(){
 }
 
 void init(){
-	TodoConfig* configObj = todoEngine.todoConfig;
-	if (configObj != nullptr){
-		try {
-			configObj->loadConfigFile();
-		} catch (int e) {
-			if (e == -1){
-				configObj->createNewConfigFile();
-#ifdef _DEBUG
-				printf("ERROR: Error parsing todo config file. New one has been generated!\n");
-#endif
-			} else {
-				printf("ERROR: Unexpected error! Exiting program!\n");
-				exit(-1);
-			}
-		}
-	}
-	try {
-		todoEngine.loadToDoFile();
-	} catch (int e) {
-		if (e == -1){
-			std::string todoFilePath = configObj->getToDoFilePath();
-			if (strcmp(todoFilePath.c_str(), "\0") == 0){ //if no todo filepath currently exists in config...
-				//Create a default one inside project directory
-				std::string fullFileDirectory = getProjectDirectory();
-				todoFilePath = fullFileDirectory + FOLDER_DELIM + "todo.jsondb";
-				//printf("Full FilePath: %s\n", todoFilePath.c_str());
-				configObj->setToDoFilePath(todoFilePath);
-				configObj->saveConfigFile();
-			}
-			todoEngine.createNewToDoFile(todoFilePath);
-#ifdef _DEBUG
-			printf("ERROR: Error parsing todo database. New one has been generated!\n");
-#endif
-		} else {
-			printf("ERROR: Unexpected error! Exiting program!\n");
-			exit(-1);
-		}
-	}
 	todoPrinter = TodoPrinter(&todoEngine);
 	//Initializing color name map
 	labelColorNames["white"] = LabelColor::WHITE;
@@ -240,7 +201,7 @@ int main(int argc, char const *argv[]){
 				addToDoDialog();
 				return 0;
 			}
-		} else if (strcmp(argv[1], "remove") == 0){
+		} else if ((strcmp(argv[1], "remove") == 0) || (strcmp(argv[1], "rm") == 0)){
 			if (argc > 2){
 				//If we are calling for help
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
@@ -424,18 +385,11 @@ int main(int argc, char const *argv[]){
 						return 0;
 					} else if (strcmp(argv[2], "filepath") == 0){
 						if (argc > 3){
-							if (strcmp(argv[3], "set") == 0){
-								if (argc <= 4){
-									printf("ERROR: Enter a filepath for the new todo file.\n");
-									return -1;
-								} else {
-									std::string filePathToUse = argv[4];
-									configFile->setToDoFilePath(filePathToUse);
-									configFile->saveConfigFile();
-									printf("New todo filepath set!\n");
-									return 0;
-								}
-							}
+							std::string filePathToUse = argv[3];
+							configFile->setToDoFilePath(filePathToUse);
+							todoEngine.saveConfigFile();
+							printf("New todo filepath set!\n");
+							return 0;
 						} else{
 							printf("%s\n", configFile->getToDoFilePath().c_str());
 							return 0;

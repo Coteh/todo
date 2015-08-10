@@ -35,6 +35,9 @@ public:
 	void appendLabelToToDo(int _toDoIndex, int _labelID);
 	void eraseLabelFromToDo(int _toDoIndex, int _labelID);
 
+	void loadConfigFile();
+	void saveConfigFile();
+
 	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> getItemIterator();
 	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> getCategoryIterator();
 	std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> getLabelIterator();
@@ -44,4 +47,6 @@ private:
 	std::vector<ToDoItem> m_todoCollection;
 	std::vector<ToDoCategory> m_categories;
 	std::vector<ToDoLabel> m_labels;
+
+	std::string m_programFilePath;
 };

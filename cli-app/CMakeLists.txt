@@ -26,8 +26,8 @@ include_directories(${RAPIDJSON_INCLUDE})
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-add_library(${appName}_cli_lib STATIC include/TodoApp.h src/TodoApp.cpp
-include/TodoPrinter.h src/TodoPrinter.cpp include/CLIHelpers.h src/CLIHelpers.cpp)
+add_library(${appName}_cli_lib STATIC include/TodoApp.h src/TodoApp.cpp include/FileIO.h src/FileIO.cpp
+include/TodoPrinter.h src/TodoPrinter.cpp include/Helpers.h src/Helpers.cpp)
 add_executable(${appName} src/main.cpp)
 target_link_libraries(${appName} ${appName}_cli_lib)
 target_link_libraries(${appName}_cli_lib todo_lib)

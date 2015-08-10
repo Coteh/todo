@@ -2,13 +2,34 @@
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "FileIO.h"
+#include "Helpers.h"
 
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
+#define CONFIG_FILENAME "config.json"
+
 TodoApp::TodoApp() {
 	todoConfig = new TodoConfig();
+	m_programFilePath = getProjectDirectory();
+
+	loadConfigFile();
+	try{
+		loadToDoFile();
+	} catch (int e){
+		std::string todoFilePath = todoConfig->getToDoFilePath();
+		if (strcmp(todoFilePath.c_str(), "\0") == 0){ //if no todo filepath currently exists in config...
+			//Create a default one inside project directory
+			std::string fullFileDirectory = getProjectDirectory();
+			todoFilePath = fullFileDirectory + FOLDER_DELIM + "todo.jsondb";
+			//printf("Full FilePath: %s\n", todoFilePath.c_str());
+			todoConfig->setToDoFilePath(todoFilePath);
+			saveConfigFile();
+		}
+		createNewToDoFile(todoFilePath);
+		printf("ERROR: Error parsing todo database. New one has been generated!\n");
+	}
 }
 
 TodoApp::~TodoApp() {
@@ -267,6 +288,21 @@ void TodoApp::eraseLabelFromToDo(int _toDoIndex, int _labelID){
 	}
 	m_todoCollection[_toDoIndex].removeLabelID(_labelID);
 	saveToDoFile();
+}
+
+void TodoApp::loadConfigFile(){
+	std::string fileContents = FileIO::readFile(m_programFilePath + FOLDER_DELIM + CONFIG_FILENAME);
+	try{
+		todoConfig->processConfig(fileContents);
+	} catch (int e){
+		saveConfigFile();
+		printf("ERROR: Error parsing todo config file. New one has been generated!\n");
+	}
+}
+
+void TodoApp::saveConfigFile(){
+	std::string configSerialized = todoConfig->writeConfig();
+	FileIO::writeFile(m_programFilePath + FOLDER_DELIM + CONFIG_FILENAME, configSerialized, FileIO::FileWriteType::WRITE);
 }
 
 std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> TodoApp::getItemIterator(){

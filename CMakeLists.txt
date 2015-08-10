@@ -31,8 +31,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-add_library(${appName}_lib STATIC include/DataTypes.h include/FileIO.h src/FileIO.cpp
-include/TodoConfig.h src/TodoConfig.cpp include/Helpers.h src/Helpers.cpp)
+add_library(${appName}_lib STATIC include/DataTypes.h 
+include/TodoConfig.h src/TodoConfig.cpp)
 
 if(TODO_BUILD_CLIAPP)
 add_subdirectory(cli-app)

@@ -5,14 +5,12 @@ public:
 	TodoConfig();
 	~TodoConfig();
 
-	void loadConfigFile();
-	void saveConfigFile();
-	void createNewConfigFile();
+	void processConfig(std::string _configContents);
+	std::string writeConfig();
 
 	void setToDoFilePath(std::string _filePath);
 	std::string getToDoFilePath();
 private:
-	std::string m_programFilePath;
 	std::string m_toDoFilePath;
 };
 
