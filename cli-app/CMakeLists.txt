@@ -2,8 +2,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 # initial setup
-SET(appName todo)
-project(${appName})
+SET(CLI_APP todo_cli_app)
 
 # checking for C++11/C++0x support
 include(CheckCXXCompilerFlag)
@@ -17,17 +16,15 @@ else()
     message(WARNING "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
-# include directories
-include_directories(${todo_SOURCE_DIR}/include)
-include_directories(${todo-cli-app_SOURCE_DIR}/include)
-include_directories(${RAPIDJSON_INCLUDE})
-
 # add definitions
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-add_library(${appName}_cli_lib STATIC include/TodoApp.h src/TodoApp.cpp include/FileIO.h src/FileIO.cpp
+add_library(${CLI_APP}_lib STATIC include/TodoApp.h src/TodoApp.cpp include/FileIO.h src/FileIO.cpp
 include/TodoPrinter.h src/TodoPrinter.cpp include/Helpers.h src/Helpers.cpp)
-add_executable(${appName} src/main.cpp)
-target_link_libraries(${appName} ${appName}_cli_lib)
-target_link_libraries(${appName}_cli_lib todo_lib)
+add_executable(${CLI_APP} src/main.cpp)
+set_target_properties(${CLI_APP} PROPERTIES OUTPUT_NAME todo)
+target_include_directories(${CLI_APP}_lib PUBLIC include)
+target_include_directories(${CLI_APP} PUBLIC include)
+target_link_libraries(${CLI_APP} ${CLI_APP}_lib)
+target_link_libraries(${CLI_APP}_lib todo_shared)

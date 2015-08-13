@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 # initial setup
-SET(UNIT_TESTS general_test cli_app_test)
+SET(SHARED_LIB todo_shared)
 
 # checking for C++11/C++0x support
 include(CheckCXXCompilerFlag)
@@ -20,15 +20,5 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-foreach (unit_test ${UNIT_TESTS})
-  add_executable(${unit_test} ${unit_test}/src/main.cpp ${unit_test}/include/TodoTest.h ${unit_test}/src/TodoTest.cpp)
-
-  target_include_directories(${unit_test} PUBLIC ${unit_test}/include)
-  target_link_libraries(${unit_test} todo_shared)
-  if (${unit_test} STREQUAL "cli_app_test")
-    if(TODO_BUILD_CLIAPP)
-      target_include_directories(${unit_test} PUBLIC ${todo_cli_app_SOURCE_DIR}/include)
-      target_link_libraries(${unit_test} todo_cli_app_lib)
-    endif()
-  endif()
-endforeach()
+add_library(${SHARED_LIB} STATIC include/DataTypes.h
+include/TodoConfig.h src/TodoConfig.cpp)
