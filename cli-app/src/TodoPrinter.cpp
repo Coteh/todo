@@ -1,5 +1,5 @@
 #include "TodoPrinter.h"
-#include "TodoApp.h"
+#include "Todo.h"
 #include "DataTypes.h"
 
 #ifdef _WIN32
@@ -8,8 +8,8 @@ const WORD TodoPrinter::colors[] = {
 };
 #endif
 
-TodoPrinter::TodoPrinter(TodoApp* _todoEngine) {
-	m_toDoEngine = _todoEngine;
+TodoPrinter::TodoPrinter(Todo* _todo) {
+	m_todo = _todo;
 
 #ifdef _WIN32
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -49,7 +49,7 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 	ToDoCategory category;
 	if (_categoryID >= 0){
 		try{
-			category = m_toDoEngine->getCategory(_categoryID);
+			category = m_todo->getCategoryByID(_categoryID);
 		} catch (int e) {
 			if (e == -1){
 				printf("ERROR: Could not get category of id %i\n", _categoryID);
@@ -59,9 +59,8 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 			return;
 		}
 	}
-	std::pair<std::vector<ToDoItem>::iterator, std::vector<ToDoItem>::iterator> toDoItrPair = m_toDoEngine->getItemIterator();
-	std::vector<ToDoItem>::iterator beginItr = toDoItrPair.first;
-	std::vector<ToDoItem>::iterator endItr = toDoItrPair.second;
+	std::vector<ToDoItem>::iterator beginItr = m_todo->itemsBegin();
+	std::vector<ToDoItem>::iterator endItr = m_todo->itemsEnd();
 	if (_categoryID >= 0){
 		printf("========== Things to Do in Category: %s ==========\n", category.name.c_str());
 	} else{
@@ -72,8 +71,8 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 		i++;
 		if ((_categoryID >= 0 && toDoItr->getCategoryID() != category.id) || 
 			(_showType == PrintShowType::NONE || ((_showType != PrintShowType::ALL)
-				&& ((toDoItr->completed && _showType != PrintShowType::COMPLETE) || 
-				(!toDoItr->completed && _showType != PrintShowType::INCOMPLETE))))) continue;
+				&& ((toDoItr->getCompleted() && _showType != PrintShowType::COMPLETE) || 
+				(!toDoItr->getCompleted() && _showType != PrintShowType::INCOMPLETE))))) continue;
 		if (shownAmt > 0 && toDoItr != endItr) printf("---------------------------\n");
 		printf("%i. ", i);
 		printToDoItem(*toDoItr, _verbose);
@@ -97,7 +96,7 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 		nameTag = "Name: ";
 		descriptionTag = "Description: ";
 	}
-	printf("[%s] %s%s\n", (_toDoItem.completed) ? "X" : " ", nameTag, _toDoItem.toDoItemInfo.name.c_str());
+	printf("[%s] %s%s\n", (_toDoItem.getCompleted()) ? "X" : " ", nameTag, _toDoItem.toDoItemInfo.name.c_str());
 	printf("%s%s\n", descriptionTag, _toDoItem.toDoItemInfo.description.c_str());
 	if (_verbose){
 		printf("Category ID: %i\n", _toDoItem.getCategoryID());
@@ -110,7 +109,7 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 			}
 			ToDoLabel label;
 			try{
-				label = m_toDoEngine->getLabel(*labelItr);
+				label = m_todo->getLabelByID(*labelItr);
 			} catch (int e){
 				label.color = -1; //give it fallback color value of -1
 			}
@@ -127,9 +126,8 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 }
 
 void TodoPrinter::printCategories(){
-	std::pair<std::vector<ToDoCategory>::iterator, std::vector<ToDoCategory>::iterator> cateItrPair = m_toDoEngine->getCategoryIterator();
-	std::vector<ToDoCategory>::iterator beginItr = cateItrPair.first;
-	std::vector<ToDoCategory>::iterator endItr = cateItrPair.second;
+	std::vector<ToDoCategory>::iterator beginItr = m_todo->categoriesBegin();
+	std::vector<ToDoCategory>::iterator endItr = m_todo->categoriesEnd();
 	printf("======== Categories ===========\n");
 	for (std::vector<ToDoCategory>::iterator cateItr = beginItr; cateItr != endItr; cateItr++){
 		printf("[ID: %i] %s\n", cateItr->id, cateItr->name.c_str());
@@ -138,9 +136,8 @@ void TodoPrinter::printCategories(){
 }
 
 void TodoPrinter::printLabels(){
-	std::pair<std::vector<ToDoLabel>::iterator, std::vector<ToDoLabel>::iterator> labelItrPair = m_toDoEngine->getLabelIterator();
-	std::vector<ToDoLabel>::iterator beginItr = labelItrPair.first;
-	std::vector<ToDoLabel>::iterator endItr = labelItrPair.second;
+	std::vector<ToDoLabel>::iterator beginItr = m_todo->labelsBegin();
+	std::vector<ToDoLabel>::iterator endItr = m_todo->labelsEnd();
 	printf("======== Labels ===========\n");
 	for (std::vector<ToDoLabel>::iterator labelItr = beginItr; labelItr != endItr; labelItr++){
 #ifdef _WIN32

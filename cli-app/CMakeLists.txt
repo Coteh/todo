@@ -20,7 +20,7 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-add_library(${CLI_APP}_lib STATIC include/TodoApp.h src/TodoApp.cpp include/FileIO.h src/FileIO.cpp
+add_library(${CLI_APP}_lib STATIC include/TodoCLI.h src/TodoCLI.cpp include/FileIO.h src/FileIO.cpp
 include/TodoPrinter.h src/TodoPrinter.cpp include/Helpers.h src/Helpers.cpp)
 add_executable(${CLI_APP} src/main.cpp)
 set_target_properties(${CLI_APP} PROPERTIES OUTPUT_NAME todo)

@@ -20,5 +20,5 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 # add targets
-add_library(${SHARED_LIB} STATIC include/DataTypes.h
+add_library(${SHARED_LIB} STATIC include/DataTypes.h include/Todo.h src/Todo.cpp
 include/TodoConfig.h src/TodoConfig.cpp)

@@ -1,7 +1,7 @@
-#include "TodoTest.h"
+#include "TodoSharedTest.h"
 #include <stdio.h>
 
-TodoTest testObj;
+TodoSharedTest testObj;
 
 int main(int argc, char const *argv[]){
 	testObj.runTests();

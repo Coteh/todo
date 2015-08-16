@@ -35,7 +35,7 @@
         "category_id": 0,
         "name": "Todo Class Prints",
         "description": "Reduce the amount of print statements in Todo class methods.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,
@@ -86,6 +86,34 @@
         "name": "Multi-Labels",
         "description": "Give todo items the ability to have more than one label.",
         "completed": true
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Add Clear All Done option",
+        "description": "Add option to remove all todo items that have been marked as completed.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 1,
+        "name": "Add config option for JSON appearance",
+        "description": "Set JSON appearance to standard, pretty, or mini.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Add pop todo item option",
+        "description": "Clears out the first todo item from the list.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Add todo item at position",
+        "description": "Adds the todo item at specified index. Will advance the index number of all todo items below the newly added item by 1.",
+        "completed": false
     },
     "category": {
         "name": "Function",

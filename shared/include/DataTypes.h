@@ -16,6 +16,9 @@ public:
 	inline int getCategoryID() const {
 		return categoryID;
 	}
+	inline bool getCompleted() const {
+		return completed;
+	}
 	inline bool hasLabels() const {
 		return !labelIDs.empty();
 	}
@@ -37,6 +40,9 @@ public:
 	inline void setCategoryID(int _categoryID){
 		categoryID = _categoryID;
 	}
+	inline void setCompleted(bool _completed){
+		completed = _completed;
+	}
 	inline void addLabelID(int _labelID){
 		labelIDs.insert_after(labelIDs.before_begin(), _labelID);
 	}
@@ -50,10 +56,10 @@ public:
 			prevItr = labelsItr;
 		}
 	}
-	bool completed;
 private:
 	int id;
 	int categoryID;
+	bool completed;
 	std::forward_list<int> labelIDs;
 };
 

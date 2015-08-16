@@ -1,7 +1,7 @@
-#include "TodoTest.h"
+#include "TodoCLITest.h"
 #include <stdio.h>
 
-TodoTest testObj;
+TodoCLITest testObj;
 
 int main(int argc, char const *argv[]){
 	testObj.runTests();

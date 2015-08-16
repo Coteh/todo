@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <map>
-#include "TodoApp.h"
+#include "TodoCLI.h"
 #include "TodoConfig.h"
 #include "DataTypes.h"
 #include "Helpers.h"
 #include "TodoPrinter.h"
 
-TodoApp todoEngine;
-TodoPrinter todoPrinter;
+TodoCLI todoEngine;
 std::map<std::string, LabelColor> labelColorNames;
 
 void addToDoDialog(){
@@ -31,9 +30,9 @@ void addToDoDialog(){
 	scanf("%i", &cateID);
 #endif
 	itemToAdd.setCategoryID(cateID);
-	itemToAdd.completed = false;
+	itemToAdd.setCompleted(false);
 	todoEngine.addToDo(itemToAdd);
-	todoPrinter.printToDos();
+	todoEngine.getToDoPrinter()->printToDos();
 }
 
 void addCategoryDialog(){
@@ -41,7 +40,7 @@ void addCategoryDialog(){
 	printf("Provide a name for this category.\n");
 	get_line(thing, 100);
 	todoEngine.addCategory(thing);
-	todoPrinter.printCategories();
+	todoEngine.getToDoPrinter()->printCategories();
 }
 
 void removeToDoDialog(){
@@ -52,14 +51,13 @@ void removeToDoDialog(){
 #else
 	scanf("%i", &charRem);
 #endif
-	if (charRem > 0 && charRem <= todoEngine.getTodoCount()){
+	if (charRem > 0 && charRem <= todoEngine.getToDoListCount()){
 		todoEngine.removeToDoByIndex(charRem - 1);
-		todoPrinter.printToDos();
+		todoEngine.getToDoPrinter()->printToDos();
 	}
 }
 
 void init(){
-	todoPrinter = TodoPrinter(&todoEngine);
 	//Initializing color name map
 	labelColorNames["white"] = LabelColor::WHITE;
 	labelColorNames["green"] = LabelColor::GREEN;
@@ -83,6 +81,7 @@ int main(int argc, char const *argv[]){
 			printf(" set\t\tModify existing todo items.\n");
 			printf(" config\t\tRetrieve/modify config information.\n");
 			printf(" clear\t\tClear all todo items.\n");
+			printf(" -v --version\tDisplay version number.\n");
 			return 0;
 		} else if (strcmp(argv[1], "show") == 0 || strcmp(argv[1], "print") == 0){
 			if (argc > 2){
@@ -94,19 +93,19 @@ int main(int argc, char const *argv[]){
 					printf(" by-category\t\tShow todo items by category of [category_id].\n");
 					return 0;
 				} else if (strcmp(argv[2], "-v") == 0){
-					todoPrinter.printToDos(true);
+					todoEngine.getToDoPrinter()->printToDos(true);
 					return 0;
 				} else if (strcmp(argv[2], "categories") == 0){
-					todoPrinter.printCategories();
+					todoEngine.getToDoPrinter()->printCategories();
 					return 0;
 				} else if (strcmp(argv[2], "labels") == 0){
-					todoPrinter.printLabels();
+					todoEngine.getToDoPrinter()->printLabels();
 					return 0;
 				} else if (strcmp(argv[2], "label-colors") == 0){
 					printf("These are the colors that can be added to a label: \n");
 					for (std::map<std::string, LabelColor>::iterator labelColorItr = labelColorNames.begin(); labelColorItr != labelColorNames.end(); labelColorItr++){
 						if (labelColorItr != labelColorNames.begin()) printf(", ");
-						todoPrinter.printLabelColor(labelColorItr->second, labelColorItr->first.c_str());
+						todoEngine.getToDoPrinter()->printLabelColor(labelColorItr->second, labelColorItr->first.c_str());
 					}
 					printf("\n");
 					return 0;
@@ -120,25 +119,25 @@ int main(int argc, char const *argv[]){
 						}
 						if (argc > 4){
 							if (strcmp(argv[4], "-v") == 0){
-								todoPrinter.printToDos(idNum, true);
+								todoEngine.getToDoPrinter()->printToDos(idNum, true);
 								return 0;
 							}
 						}
-						todoPrinter.printToDos(idNum);
+						todoEngine.getToDoPrinter()->printToDos(idNum);
 						return 0;
 					} else{
 						printf("ERROR: Please provide the index of the category to sort todos by.\n");
 						return -1;
 					}
 				} else if (strcmp(argv[2], "completed") == 0){
-					todoPrinter.printToDos(PrintShowType::COMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
+					todoEngine.getToDoPrinter()->printToDos(PrintShowType::COMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
 					return 0;
 				} else if (strcmp(argv[2], "incompleted") == 0){
-					todoPrinter.printToDos(PrintShowType::INCOMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
+					todoEngine.getToDoPrinter()->printToDos(PrintShowType::INCOMPLETE, (argc > 3 && (strcmp(argv[3], "-v") == 0)));
 					return 0;
 				}
 			} else{
-				todoPrinter.printToDos();
+				todoEngine.getToDoPrinter()->printToDos();
 				return 0;
 			}
 		} else if (strcmp(argv[1], "add") == 0){
@@ -173,12 +172,12 @@ int main(int argc, char const *argv[]){
 				item.toDoItemInfo.name = argv[2];
 				item.toDoItemInfo.description = argv[3];
 				item.setCategoryID(0); //will be assigned to first category automatically for now
-				item.completed = false;
+				item.setCompleted(false);
 				todoEngine.addToDo(item);
 				printf("Todo item added.\n");
 				if (argc > 4){
 					if (strcmp(argv[4], "-p") == 0){
-						todoPrinter.printToDos();
+						todoEngine.getToDoPrinter()->printToDos();
 					}
 				}
 				return 0;
@@ -224,10 +223,13 @@ int main(int argc, char const *argv[]){
 							printf("ERROR: Could not process ID number of the category to remove.");
 							return -1;
 						}
-						if (todoEngine.removeCategory(cateIDNum) == -1){
-							printf("ERROR: No category exists with ID of %i\n", cateIDNum);
-						} else{
+						try {
+							todoEngine.removeCategoryByID(cateIDNum);
 							printf("Category removed!\n");
+						} catch (int e){
+							if (e == -1){
+								printf("ERROR: No category exists with ID of %i\n", cateIDNum);
+							}
 						}
 						return 0;
 					}
@@ -241,10 +243,11 @@ int main(int argc, char const *argv[]){
 							printf("ERROR: Could not process ID number of the label to remove.");
 							return -1;
 						}
-						if (todoEngine.removeLabel(labelNum) == -1){
-							printf("ERROR: No label exists with ID of %i\n", labelNum);
-						} else{
+						try {
+							todoEngine.removeLabelByID(labelNum);
 							printf("Label removed!\n");
+						} catch (int e) {
+							printf("ERROR: No label exists with ID of %i\n", labelNum);
 						}
 						return 0;
 					}
@@ -268,7 +271,7 @@ int main(int argc, char const *argv[]){
 				printf("ToDo item removed.\n");
 				if (argc > 3){
 					if (strcmp(argv[3], "-p") == 0){
-						todoPrinter.printToDos();
+						todoEngine.getToDoPrinter()->printToDos();
 					}
 				}
 				return 0;
@@ -376,8 +379,7 @@ int main(int argc, char const *argv[]){
 				}
 			}
 		} else if (strcmp(argv[1], "config") == 0){
-			TodoConfig* configFile = todoEngine.todoConfig;
-			if (configFile != nullptr){
+			if (todoEngine.hasConfigFile()){
 				if (argc > 2){
 					if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
 						printf("usage: todo config [--h] <command>\n\nList of commands:\n");
@@ -386,29 +388,31 @@ int main(int argc, char const *argv[]){
 					} else if (strcmp(argv[2], "filepath") == 0){
 						if (argc > 3){
 							std::string filePathToUse = argv[3];
-							configFile->setToDoFilePath(filePathToUse);
-							todoEngine.saveConfigFile();
+							todoEngine.setToDoFilePath(filePathToUse);
 							printf("New todo filepath set!\n");
 							return 0;
-						} else{
-							printf("%s\n", configFile->getToDoFilePath().c_str());
+						} else {
+							printf("%s\n", todoEngine.getToDoFilePath().c_str());
 							return 0;
 						}
 					}
 				}
 			} else{
-				printf("ERROR: Config object NOT initialized!\n");
+				printf("ERROR: Config file could not be found!\n");
 			}
 		} else if (strcmp(argv[1], "clear") == 0){
 			//Duplicate function of "remove all"
 			todoEngine.removeAllToDos(); //remove 'em all!
 			printf("All ToDos cleared!\n");
 			return 0;
+		} else if (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0){
+			printf("v0.99\n");
+			return 0;
 		}
 		printf("ERROR: Invalid command.\n");
 		return -1;
 	}
-	todoPrinter.printToDos();
+	todoEngine.getToDoPrinter()->printToDos();
 #ifdef _DEBUG
 	getchar();
 #endif
