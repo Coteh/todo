@@ -37,9 +37,9 @@ private:
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	HANDLE hstdout;
 	static const WORD colors[];
-
+#else
+	static const int colors[];
+#endif
 	void beginPrintPaint(int _colorIndex);
 	void endPrintPaint();
-#endif
 };
-

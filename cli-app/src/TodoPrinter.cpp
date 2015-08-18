@@ -6,6 +6,10 @@
 const WORD TodoPrinter::colors[] = {
 	0x0F, 0x02, 0x0D, 0x0E, 0x0C, 0x09, 0x0B, 0x03, 0x04
 };
+#else
+const int TodoPrinter::colors[] = {
+	39, 32, 35, 33, 31, 34, 36, 44, 41
+};
 #endif
 
 TodoPrinter::TodoPrinter(Todo* _todo) {
@@ -69,9 +73,9 @@ void TodoPrinter::printToDos(int _categoryID, PrintShowType _showType, bool _ver
 	int i = 0, shownAmt = 0;
 	for (std::vector<ToDoItem>::iterator toDoItr = beginItr; toDoItr != endItr; toDoItr++){
 		i++;
-		if ((_categoryID >= 0 && toDoItr->getCategoryID() != category.id) || 
+		if ((_categoryID >= 0 && toDoItr->getCategoryID() != category.id) ||
 			(_showType == PrintShowType::NONE || ((_showType != PrintShowType::ALL)
-				&& ((toDoItr->getCompleted() && _showType != PrintShowType::COMPLETE) || 
+				&& ((toDoItr->getCompleted() && _showType != PrintShowType::COMPLETE) ||
 				(!toDoItr->getCompleted() && _showType != PrintShowType::INCOMPLETE))))) continue;
 		if (shownAmt > 0 && toDoItr != endItr) printf("---------------------------\n");
 		printf("%i. ", i);
@@ -113,13 +117,9 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 			} catch (int e){
 				label.color = -1; //give it fallback color value of -1
 			}
-#ifdef _WIN32
 			beginPrintPaint(label.color);
-#endif
 			printf("%s", label.name.c_str());
-#ifdef _WIN32
 			endPrintPaint();
-#endif
 		}
 		printf("\n");
 	}
@@ -140,33 +140,31 @@ void TodoPrinter::printLabels(){
 	std::vector<ToDoLabel>::iterator endItr = m_todo->labelsEnd();
 	printf("======== Labels ===========\n");
 	for (std::vector<ToDoLabel>::iterator labelItr = beginItr; labelItr != endItr; labelItr++){
-#ifdef _WIN32
 		beginPrintPaint(labelItr->color);
-#endif
 		printf("[ID: %i] %s\n", labelItr->id, labelItr->name.c_str());
-#ifdef _WIN32
 		endPrintPaint();
-#endif
 	}
 	printf("===========================\n");
 }
 
 void TodoPrinter::printLabelColor(int _colorIndex, const char* _text){
-#ifdef _WIN32
 	beginPrintPaint(_colorIndex);
-#endif
 	printf("%s", _text);
-#ifdef _WIN32
 	endPrintPaint();
-#endif
 }
 
-#ifdef _WIN32
 void TodoPrinter::beginPrintPaint(int _colorIndex){
+#ifdef _WIN32
 	if (_colorIndex >= 0)	SetConsoleTextAttribute(hstdout, colors[_colorIndex]);
+#else
+	if (_colorIndex >= 0)	printf("\033[1;%im", colors[_colorIndex]);
+#endif
 }
 
 void TodoPrinter::endPrintPaint(){
+#ifdef _WIN32
 	SetConsoleTextAttribute(hstdout, csbi.wAttributes);
-}
+#else
+	printf("\033[0m");
 #endif
+}
