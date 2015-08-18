@@ -4,6 +4,7 @@
 #include "DataTypes.h"
 #include "FileIO.h"
 #include "Helpers.h"
+#include <string.h>
 
 #define CONFIG_FILENAME "config.json"
 
@@ -47,7 +48,7 @@ void TodoCLI::saveToDoFile(){
 	if (m_todoConfig == nullptr){
 		throw -2;
 	}
-	
+
 	std::string todoJSONBuffer = m_todo.writeItems();
 
 	FileIO::writeFile(m_todoConfig->getToDoFilePath(), todoJSONBuffer, FileIO::FileWriteType::WRITE);
