@@ -12,6 +12,8 @@ TodoCLITest::~TodoCLITest(){
 
 void TodoCLITest::runTests(){
 	testAddingItem();
+	testRemovingItemByPop();
+	testRemovingAllItems();
 	displayResults();
 }
 
@@ -32,13 +34,12 @@ void TodoCLITest::testAddingItem(){
 		testItem.toDoItemInfo.description = "This is a test item.";
 		m_toDoTestEngine->addToDo(testItem);
 		//We pass the test if there's one item in the list now
-		if (m_toDoTestEngine->getToDoListCount() == 1){
+		if (m_toDoTestEngine->getToDoListSize() == 1){
 			registerPass();
 			return;
 		}
 	} catch (int e){
 		registerError();
-		registerFailure();
 	}
 	registerFailure();
 }
@@ -55,8 +56,37 @@ void TodoCLITest::testRemovingItemByIndex(){
 
 }
 
-void TodoCLITest::testRemovingAllItems(){
+void TodoCLITest::testRemovingItemByPop(){
+	registerTest("Popping the top item out of the Todo list");
+	try {
+		refreshEngine();
+		//Loop of popping items (list size) times
+		size_t listSize = m_toDoTestEngine->getToDoListSize();
+		for (size_t i = 0; i <= listSize; i++){
+			m_toDoTestEngine->popToDo();
+		}
+		//We pass the test if we don't get any errors at all during this process
+		registerPass();
+		return;
+	} catch (int e){
+		registerError();
+	}
+	registerFailure();
+}
 
+void TodoCLITest::testRemovingAllItems(){
+	registerTest("Removing all todo items from list");
+	try {
+		refreshEngine();
+		//Remove all items
+		m_toDoTestEngine->removeAllToDos();
+		//We pass the test if we don't get any errors at all during this process
+		registerPass();
+		return;
+	} catch (int e){
+		registerError();
+	}
+	registerFailure();
 }
 
 void TodoCLITest::testRemovingCategoryByID(){

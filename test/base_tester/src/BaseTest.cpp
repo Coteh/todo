@@ -17,7 +17,7 @@ void BaseTest::displayResults(){
 	int fails = testsRun - passes;
 	printf("Passed %i/%i tests!\n", passes, testsRun);
 	if (fails)
-		printf("Failed %i/%i tests!\n", fails, testsRun);
+		printf("Failed %i %s!\n", fails, (fails == 1) ? "test" : "tests");
 }
 
 void BaseTest::registerTest(std::string _testName){

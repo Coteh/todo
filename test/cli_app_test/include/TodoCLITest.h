@@ -18,6 +18,7 @@ private:
 	void testAddingCategory();
 	void testAddingLabel();
 	void testRemovingItemByIndex();
+	void testRemovingItemByPop();
 	void testRemovingAllItems();
 	void testRemovingCategoryByID();
 	void testRemovingLabelByID();

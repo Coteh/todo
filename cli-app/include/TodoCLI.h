@@ -14,7 +14,7 @@ class TodoPrinter;
 class TodoCLI {
 public:
 	TodoCLI();
-	~TodoCLI();
+	virtual ~TodoCLI();
 
 	void loadToDoFile();
 	void saveToDoFile();
@@ -23,7 +23,7 @@ public:
 	void loadConfigFile();
 	void saveConfigFile();
 
-	size_t getToDoListCount();
+	size_t getToDoListSize();
 	std::string getToDoFilePath();
 
 	TodoPrinter* getToDoPrinter() const;
@@ -32,6 +32,7 @@ public:
 	void addCategory(std::string _name);
 	void addLabel(std::string _name, LabelColor _labelColor);
 	void removeToDoByIndex(int _index);
+	void popToDo();
 	void removeAllToDos();
 	void removeCategoryByID(int _categoryID);
 	void removeLabelByID(int _labelID);

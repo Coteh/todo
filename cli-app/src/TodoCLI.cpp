@@ -58,7 +58,7 @@ bool TodoCLI::hasConfigFile(){
 	return (m_todoConfig != nullptr && m_todoConfig->getToDoFilePath() != "");
 }
 
-size_t TodoCLI::getToDoListCount(){
+size_t TodoCLI::getToDoListSize(){
 	return m_todo.todoListSize();
 }
 
@@ -95,6 +95,14 @@ void TodoCLI::removeToDoByIndex(int _index){
 		throw -1;
 	}
 	m_todo.removeItemByIndex(_index);
+	saveToDoFile();
+}
+
+void TodoCLI::popToDo(){
+	if (m_todo.todoListSize() <= 0){
+		throw -1;
+	}
+	m_todo.removeItemByIndex(0);
 	saveToDoFile();
 }
 

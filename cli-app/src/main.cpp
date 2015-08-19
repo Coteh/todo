@@ -51,7 +51,7 @@ void removeToDoDialog(){
 #else
 	scanf("%i", &charRem);
 #endif
-	if (charRem > 0 && charRem <= todoEngine.getToDoListCount()){
+	if (charRem > 0 && charRem <= todoEngine.getToDoListSize()){
 		todoEngine.removeToDoByIndex(charRem - 1);
 		todoEngine.getToDoPrinter()->printToDos();
 	}
@@ -404,6 +404,14 @@ int main(int argc, char const *argv[]){
 			//Duplicate function of "remove all"
 			todoEngine.removeAllToDos(); //remove 'em all!
 			printf("All ToDos cleared!\n");
+			return 0;
+		} else if (strcmp(argv[1], "pop") == 0){
+			todoEngine.popToDo();
+			printf("First todo item on list has been cleared.\n");
+			return 0;
+		} else if (strcmp(argv[1], "list-size") == 0){
+			size_t todoListSize = todoEngine.getToDoListSize();
+			printf("%i\n", todoListSize);
 			return 0;
 		} else if (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0){
 			printf("v0.99\n");
