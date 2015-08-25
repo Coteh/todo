@@ -3,7 +3,7 @@
 #include <string>
 #include "Todo.h"
 
-struct ToDoItem;
+class ToDoItem;
 struct ToDoCategory;
 struct ToDoLabel;
 enum LabelColor : unsigned int;

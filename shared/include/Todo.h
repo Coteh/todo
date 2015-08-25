@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-struct ToDoItem;
+class ToDoItem;
 struct ToDoCategory;
 struct ToDoLabel;
 

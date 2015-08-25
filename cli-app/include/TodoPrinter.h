@@ -5,7 +5,7 @@
 #endif
 
 class Todo;
-struct ToDoItem;
+class ToDoItem;
 
 enum PrintShowType {
 	NONE = 0,
