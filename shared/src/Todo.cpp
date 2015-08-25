@@ -15,7 +15,7 @@ Todo::~Todo(void){
 	m_labelCollection.clear();
 }
 
-size_t Todo::todoListSize(){
+size_t Todo::getTodoListSize(){
 	return m_itemCollection.size();
 }
 
@@ -190,6 +190,7 @@ void Todo::removeCategoryByID(int _categoryID){
 	for (std::vector<ToDoCategory>::iterator cateItr = m_categoryCollection.begin(); cateItr != m_categoryCollection.end(); ++cateItr){
 		if (cateItr->id == _categoryID){
 			m_categoryCollection.erase(cateItr);
+			return;
 		}
 	}
 }
@@ -198,6 +199,7 @@ void Todo::removeLabelByID(int _labelID){
 	for (std::vector<ToDoLabel>::iterator labelItr = m_labelCollection.begin(); labelItr != m_labelCollection.end(); ++labelItr){
 		if (labelItr->id == _labelID){
 			m_labelCollection.erase(labelItr);
+			return;
 		}
 	}
 }

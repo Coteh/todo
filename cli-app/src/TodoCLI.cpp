@@ -59,7 +59,7 @@ bool TodoCLI::hasConfigFile(){
 }
 
 size_t TodoCLI::getToDoListSize(){
-	return m_todo.todoListSize();
+	return m_todo.getTodoListSize();
 }
 
 std::string TodoCLI::getToDoFilePath(){
@@ -91,7 +91,7 @@ void TodoCLI::addLabel(std::string _name, LabelColor _labelColor){
 }
 
 void TodoCLI::removeToDoByIndex(int _index){
-	if (_index < 0 || _index >= m_todo.todoListSize()){
+	if (_index < 0 || _index >= m_todo.getTodoListSize()){
 		throw -1;
 	}
 	m_todo.removeItemByIndex(_index);
@@ -99,7 +99,7 @@ void TodoCLI::removeToDoByIndex(int _index){
 }
 
 void TodoCLI::popToDo(){
-	if (m_todo.todoListSize() <= 0){
+	if (m_todo.getTodoListSize() <= 0){
 		throw -1;
 	}
 	m_todo.removeItemByIndex(0);
@@ -107,7 +107,7 @@ void TodoCLI::popToDo(){
 }
 
 void TodoCLI::removeAllToDos(){
-	size_t listSize = m_todo.todoListSize();
+	size_t listSize = m_todo.getTodoListSize();
 	for (size_t i = 0; i < listSize; i++){
 		m_todo.removeItemByIndex(i);
 	}
@@ -125,7 +125,7 @@ void TodoCLI::removeLabelByID(int _labelID){
 }
 
 void TodoCLI::setToDoToCategory(int _toDoIndex, int _categoryID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.todoListSize()){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
 		throw -1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -135,7 +135,7 @@ void TodoCLI::setToDoToCategory(int _toDoIndex, int _categoryID){
 }
 
 void TodoCLI::markToDoCompleted(int _toDoIndex, bool _completed){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.todoListSize()){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
 		throw -1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -145,7 +145,7 @@ void TodoCLI::markToDoCompleted(int _toDoIndex, bool _completed){
 }
 
 void TodoCLI::appendLabelToToDo(int _toDoIndex, int _labelID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.todoListSize()){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
 		throw - 1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -155,7 +155,7 @@ void TodoCLI::appendLabelToToDo(int _toDoIndex, int _labelID){
 }
 
 void TodoCLI::eraseLabelFromToDo(int _toDoIndex, int _labelID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.todoListSize()){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
 		throw - 1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);

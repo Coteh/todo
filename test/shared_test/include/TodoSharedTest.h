@@ -8,9 +8,22 @@ public:
 	~TodoSharedTest();
 
 	virtual void runTests();
+private:
+	Todo m_testTodo;
+
+	void refreshTodo();
 
 	void todoReadTest();
 	void todoWriteTest();
-private:
-	Todo testTodo;
+
+	void addItemTest();
+	void addCategoryTest();
+	void addLabelTest();
+
+	void itemModificationTest();
+	void testGetters();
+
+	void removeItemTest();
+	void removeCategoryTest();
+	void removeLabelTest();
 };

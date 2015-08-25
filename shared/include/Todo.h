@@ -14,7 +14,7 @@ public:
 	void parseItems(std::string _contentsBuffer);
 	std::string writeItems();
 
-	size_t todoListSize();
+	size_t getTodoListSize();
 
 	ToDoItem getItemByIndex(int _itemIndex);
 	ToDoCategory getCategoryByID(int _categoryID);
