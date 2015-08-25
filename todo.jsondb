@@ -69,8 +69,8 @@
         "id": 0,
         "category_id": 0,
         "label_ids": [
-            2,
-            1
+            1,
+            2
         ],
         "name": "Reduce Code Duplication in main.cpp",
         "description": "Reduce code duplication by reorganizing command checks.",
@@ -80,8 +80,8 @@
         "id": 0,
         "category_id": 0,
         "label_ids": [
-            2,
-            1
+            1,
+            2
         ],
         "name": "Multi-Labels",
         "description": "Give todo items the ability to have more than one label.",
@@ -113,6 +113,34 @@
         "category_id": 0,
         "name": "Add todo item at position",
         "description": "Adds the todo item at specified index. Will advance the index number of all todo items below the newly added item by 1.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Edit todo item Title/Description",
+        "description": "Use the todo set command to set a new title and/or description for the todo item.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Comma delimited labels add/remove",
+        "description": "Ability to add/remove multiple labels at once separating each with a comma.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 1,
+        "name": "Tags",
+        "description": "Set tags for a todo item, and ability to add/remove multiple tags comma delimited.",
+        "completed": false
+    },
+    "todo": {
+        "id": 0,
+        "category_id": 0,
+        "name": "Expanded Item View",
+        "description": "View a single todo item, and see more detailed information about it.",
         "completed": false
     },
     "category": {
