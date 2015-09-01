@@ -16,6 +16,8 @@ public:
 	TodoCLI();
 	virtual ~TodoCLI();
 
+	void init();
+
 	void loadToDoFile();
 	void saveToDoFile();
 
@@ -34,6 +36,7 @@ public:
 	void removeToDoByIndex(int _index);
 	void popToDo();
 	void removeAllToDos();
+	void removeAllToDosMarked();
 	void removeCategoryByID(int _categoryID);
 	void removeLabelByID(int _labelID);
 

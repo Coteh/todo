@@ -52,7 +52,7 @@ void TodoSharedTest::todoWriteTest(){
 }
 
 void TodoSharedTest::addItemTest(){
-	registerTest("Adding an item to the Todo list");
+	registerTest("Adding an item to the todo list");
 	refreshTodo();
 	ToDoItem testItem;
 	m_testTodo.addItem(testItem);
@@ -82,7 +82,7 @@ void TodoSharedTest::addCategoryTest(){
 }
 
 void TodoSharedTest::addLabelTest(){
-	registerTest("Adding a label to the label test");
+	registerTest("Adding a label to the label list");
 	refreshTodo();
 	ToDoLabel testLabel;
 	m_testTodo.addLabel(testLabel);

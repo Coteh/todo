@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseTest.h"
 
-class TodoCLI;
+class TodoCLITestWrapper;
 
 class TodoCLITest : public BaseTest {
 public:
@@ -10,7 +10,7 @@ public:
 
 	virtual void runTests();
 private:
-	TodoCLI* m_toDoTestEngine;
+	TodoCLITestWrapper* m_toDoTestEngine;
 
 	void refreshEngine();
 
@@ -20,6 +20,7 @@ private:
 	void testRemovingItemByIndex();
 	void testRemovingItemByPop();
 	void testRemovingAllItems();
+	void testRemovingAllCompletedItems();
 	void testRemovingCategoryByID();
 	void testRemovingLabelByID();
 

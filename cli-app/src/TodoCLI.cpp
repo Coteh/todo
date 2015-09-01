@@ -12,6 +12,15 @@ TodoCLI::TodoCLI() {
 	m_todoConfig = new TodoConfig();
 	m_programFilePath = getProjectDirectory();
 
+	init();
+}
+
+TodoCLI::~TodoCLI() {
+	delete m_todoConfig;
+	delete m_todoPrinter;
+}
+
+void TodoCLI::init(){
 	loadConfigFile();
 	try{
 		loadToDoFile();
@@ -29,11 +38,6 @@ TodoCLI::TodoCLI() {
 	}
 
 	m_todoPrinter = new TodoPrinter(&m_todo);
-}
-
-TodoCLI::~TodoCLI() {
-	delete m_todoConfig;
-	delete m_todoPrinter;
 }
 
 void TodoCLI::loadToDoFile(){
@@ -109,7 +113,17 @@ void TodoCLI::popToDo(){
 void TodoCLI::removeAllToDos(){
 	size_t listSize = m_todo.getTodoListSize();
 	for (size_t i = 0; i < listSize; i++){
-		m_todo.removeItemByIndex(i);
+		m_todo.removeItemByIndex(0);
+	}
+	saveToDoFile();
+}
+
+void TodoCLI::removeAllToDosMarked(){
+	size_t listSize = m_todo.getTodoListSize();
+	if (listSize <= 0) return;
+	for (size_t i = listSize - 1; i <= listSize; i--){
+		ToDoItem item = m_todo.getItemByIndex(i);
+		if (item.getCompleted()) m_todo.removeItemByIndex(i);
 	}
 	saveToDoFile();
 }

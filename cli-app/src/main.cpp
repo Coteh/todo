@@ -73,20 +73,22 @@ void init(){
 int main(int argc, char const *argv[]){
 	init();
 	if (argc > 1){
-		if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "--h") == 0){
-			printf("usage: todo [--h] <command>\n\ntodo is a command-line app that organizes todo items.\n\nList of commands:\n");
+		if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0){
+			printf("usage: todo [-h/--help] <command>\n\ntodo is a command-line app that organizes todo items.\n\nList of commands:\n");
 			printf(" add\t\tAdd a todo item. Provide a name and description for second and third arguments.\n");
 			printf(" remove\t\tRemove a todo item by index number. Provide the todo's index number as the second argument.\n");
 			printf(" show/print\tPrints list of todo items that have been added.\n");
 			printf(" set\t\tModify existing todo items.\n");
 			printf(" config\t\tRetrieve/modify config information.\n");
 			printf(" clear\t\tClear all todo items.\n");
+			printf(" pop\t\tRemoves the first todo item from the list.\n");
+			printf(" count\t\tReturns the amount of todo items currently in the list.\n");
 			printf(" -v --version\tDisplay version number.\n");
 			return 0;
 		} else if (strcmp(argv[1], "show") == 0 || strcmp(argv[1], "print") == 0){
 			if (argc > 2){
-				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-					printf("usage: todo show/print [--h] <command> [-v]\n\nDefault action is to show all todo items.\n\nList of commands:\n");
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+					printf("usage: todo show/print [-h/--help] <command> [-v]\n\nDefault action is to show all todo items.\n\nList of commands:\n");
 					printf(" categories\t\tShow all categories.\n");
 					printf(" labels\t\t\tShow all labels.\n");
 					printf(" label-colors\t\tShow all colors that a label can have.\n");
@@ -183,8 +185,8 @@ int main(int argc, char const *argv[]){
 				return 0;
 			} else if (argc == 3){
 				//If we are calling for help
-				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-					printf("usage: todo add [--h] <command>\n\nList of commands:\n");
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+					printf("usage: todo add [-h/--help] <command>\n\nList of commands:\n");
 					printf(" [name] [description]\tTodo item's name and description respectively.\n");
 					printf(" category [name]\t\tAdd category dialog. (Optional) Provide a subsequent argument for category name.\n");
 					printf(" label [name] [color]\t\tAdd a label by providing its [name] and [color] as arguments.\n");
@@ -203,8 +205,8 @@ int main(int argc, char const *argv[]){
 		} else if ((strcmp(argv[1], "remove") == 0) || (strcmp(argv[1], "rm") == 0)){
 			if (argc > 2){
 				//If we are calling for help
-				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-					printf("usage: todo remove [--h] <command>\n\nList of commands:\n");
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+					printf("usage: todo remove [-h/--help] <command>\n\nList of commands:\n");
 					printf(" [index]\t\t\t\tIndex number of todo item to delete.\n");
 					printf(" category [category_id]\t\t\tRemove a category specified by [category_id].\n");
 					printf(" label [label_id]\t\t\tRemove a label specified by [label_id].\n");
@@ -281,8 +283,8 @@ int main(int argc, char const *argv[]){
 			}
 		} else if (strcmp(argv[1], "set") == 0){
 			if (argc > 2){
-				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-					printf("usage: todo set [--h] <command>\n\nList of commands:\n");
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+					printf("usage: todo set [-h/--help] <command>\n\nList of commands:\n");
 					printf(" todo [index] <command>         Perform set operations on todo item of [index].\n");
 					return 0;
 				} else if (strcmp(argv[2], "todo") == 0){
@@ -293,8 +295,8 @@ int main(int argc, char const *argv[]){
 							printf("ERROR: Could not process an index number for todo item to retrieve.\n");
 							return -1;
 						}
-						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "--h") == 0){
-							printf("usage: todo set todo %i [--h] <command>\n\nList of commands:\n", indexNum);
+						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "-h") == 0){
+							printf("usage: todo set todo %i [-h/--help] <command>\n\nList of commands:\n", indexNum);
 							printf(" category [category_id]\t\t\tSwitch todo item's category to a category of [category_id].\n");
 							printf(" label add [label_id]\t\t\tAdd a label of ID [label_id] to todo item.\n");
 							printf(" label remove [label_id]\t\tRemove a label of ID [label_id] from todo item.\n");
@@ -381,8 +383,8 @@ int main(int argc, char const *argv[]){
 		} else if (strcmp(argv[1], "config") == 0){
 			if (todoEngine.hasConfigFile()){
 				if (argc > 2){
-					if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "--h") == 0){
-						printf("usage: todo config [--h] <command>\n\nList of commands:\n");
+					if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+						printf("usage: todo config [-h/--help] <command>\n\nList of commands:\n");
 						printf(" filepath [filepath]	Get the filepath of todo database. (or set the filepath if [filepath] is provided)\n");
 						return 0;
 					} else if (strcmp(argv[2], "filepath") == 0){
@@ -401,15 +403,27 @@ int main(int argc, char const *argv[]){
 				printf("ERROR: Config file could not be found!\n");
 			}
 		} else if (strcmp(argv[1], "clear") == 0){
-			//Duplicate function of "remove all"
-			todoEngine.removeAllToDos(); //remove 'em all!
-			printf("All ToDos cleared!\n");
-			return 0;
+			if (argc > 2){
+				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
+					printf("usage: todo clear [-h/--help] <command>\n\nDefault clear action deletes all todo items from list.\n\nList of commands:\n");
+					printf(" completed\tClear all completed items from list.\n");
+					return 0;
+				} else if (strcmp(argv[2], "completed") == 0){
+					todoEngine.removeAllToDosMarked();
+					printf("All completed ToDos have been cleared!\n");
+					return 0;
+				}
+			} else {
+				//Duplicate function of "remove all"
+				todoEngine.removeAllToDos(); //remove 'em all!
+				printf("All ToDos cleared!\n");
+				return 0;
+			}
 		} else if (strcmp(argv[1], "pop") == 0){
 			todoEngine.popToDo();
 			printf("First todo item on list has been cleared.\n");
 			return 0;
-		} else if (strcmp(argv[1], "list-size") == 0){
+		} else if (strcmp(argv[1], "count") == 0){
 			size_t todoListSize = todoEngine.getToDoListSize();
 			printf("%i\n", todoListSize);
 			return 0;

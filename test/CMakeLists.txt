@@ -35,7 +35,7 @@ foreach (unit_test ${UNIT_TESTS})
   elseif (${unit_test} STREQUAL "shared_test")
     set(unit_test_files ${unit_test}/include/TodoSharedTest.h ${unit_test}/src/TodoSharedTest.cpp ${unit_test}/src/main.cpp)
   elseif (${unit_test} STREQUAL "cli_app_test")
-    set(unit_test_files ${unit_test}/include/TodoCLITest.h ${unit_test}/src/TodoCLITest.cpp ${unit_test}/src/main.cpp)
+    set(unit_test_files ${unit_test}/include/TodoCLITest.h ${unit_test}/src/TodoCLITest.cpp ${unit_test}/include/TodoCLITestWrapper.h ${unit_test}/src/TodoCLITestWrapper.cpp ${unit_test}/src/main.cpp)
   endif()
 
   if (is_unit_test_lib)
