@@ -175,8 +175,8 @@ int main(int argc, char const *argv[]){
 				item.toDoItemInfo.description = argv[3];
 				item.setCategoryID(0); //will be assigned to first category automatically for now
 				item.setCompleted(false);
-				bool isSettingIndex = false, isPrinting = false;
-				int indexToSet = -1;
+				bool isSettingIndex = false, isSettingCategory = false, isPrinting = false;
+				int indexToSet = -1, categoryIDToSet = -1;
 				if (argc > 4){
 					for (int i = 4; i < argc; i++){
 						if (strcmp(argv[i], "-i") == 0){
@@ -193,10 +193,27 @@ int main(int argc, char const *argv[]){
 								isSettingIndex = true;
 							}
 							i++;
+						} else if (strcmp(argv[i], "-c") == 0){
+							if (i >= argc - 1){
+								printf("ERROR: Category ID not provided.\n");
+								return -1;
+							}
+							char* pEnd;
+							categoryIDToSet = strtol(argv[i + 1], &pEnd, 0);
+							if (strcmp(pEnd, "\0") != 0){
+								printf("ERROR: Could not process category ID for the todo item to be categorized in.\n");
+								return -1;
+							} else{
+								isSettingCategory = true;
+							}
+							i++;
 						} else if (strcmp(argv[i], "-p") == 0){
 							isPrinting = true;
 						}
 					}
+				}
+				if (isSettingCategory){
+					item.setCategoryID(categoryIDToSet);
 				}
 				if (isSettingIndex){
 					try{
@@ -219,7 +236,10 @@ int main(int argc, char const *argv[]){
 				//If we are calling for help
 				if (strcmp(argv[2], "--help") == 0 || strcmp(argv[2], "-h") == 0){
 					printf("usage: todo add [-h/--help] <command>\n\nList of commands:\n");
-					printf(" [name] [description]\tTodo item's name and description respectively.\n");
+					printf(" [name] [description] \t\tTodo item's name and description respectively.\n");
+					printf(" \t-i <index>\t\tSpecify position/index on the list to add the item at.\n");
+					printf(" \t-c <category_id>\tSpecify the category ID the item will be assigned to upon add.\n");
+					printf(" \t-p\t\t\tPrints results after successful add.\n");
 					printf(" category [name]\t\tAdd category dialog. (Optional) Provide a subsequent argument for category name.\n");
 					printf(" label [name] [color]\t\tAdd a label by providing its [name] and [color] as arguments.\n");
 					return 0;
@@ -329,6 +349,9 @@ int main(int argc, char const *argv[]){
 						}
 						if (strcmp(argv[4], "--help") == 0 || strcmp(argv[4], "-h") == 0){
 							printf("usage: todo set todo %i [-h/--help] <command>\n\nList of commands:\n", indexNum);
+							printf(" info\t\t\t\t\tModify todo item's name and/or description.\n");
+							printf("\t-name <name>\t\t\tSet the name of the item.\n");
+							printf("\t-description <description>\tSet the description of the item.\n");
 							printf(" category [category_id]\t\t\tSwitch todo item's category to a category of [category_id].\n");
 							printf(" label add [label_id]\t\t\tAdd a label of ID [label_id] to todo item.\n");
 							printf(" label remove [label_id]\t\tRemove a label of ID [label_id] from todo item.\n");
@@ -422,7 +445,12 @@ int main(int argc, char const *argv[]){
 										printf("ERROR: Could not process ID number of the label to add.");
 										return -1;
 									}
-									todoEngine.appendLabelToToDo(indexNum - 1, labelNum);
+									try{
+										todoEngine.appendLabelToToDo(indexNum - 1, labelNum);
+									} catch (int e){
+										printf("ERROR: Index number %i out of todo list range.\n", indexNum);
+										return -1;
+									}
 									printf("Label added to ToDo item!\n");
 									return 0;
 								} else if (strcmp(argv[5], "remove") == 0){
@@ -436,7 +464,12 @@ int main(int argc, char const *argv[]){
 										printf("ERROR: Could not process ID number of the label to remove.");
 										return -1;
 									}
-									todoEngine.eraseLabelFromToDo(indexNum - 1, labelNum);
+									try{
+										todoEngine.eraseLabelFromToDo(indexNum - 1, labelNum);
+									} catch (int e){
+										printf("ERROR: Index number %i out of todo list range.\n", indexNum);
+										return -1;
+									}
 									printf("Label removed from ToDo item!\n");
 									return 0;
 								}
@@ -493,7 +526,7 @@ int main(int argc, char const *argv[]){
 			printf("%i\n", todoListSize);
 			return 0;
 		} else if (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0){
-			printf("v0.99\n");
+			printf("v1.0\n");
 			return 0;
 		}
 		printf("ERROR: Invalid command.\n");
