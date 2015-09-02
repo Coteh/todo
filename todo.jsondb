@@ -92,7 +92,7 @@
         "category_id": 0,
         "name": "Add Clear All Done option",
         "description": "Add option to remove all todo items that have been marked as completed.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,
@@ -106,21 +106,21 @@
         "category_id": 0,
         "name": "Add pop todo item option",
         "description": "Clears out the first todo item from the list.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,
         "category_id": 0,
         "name": "Add todo item at position",
         "description": "Adds the todo item at specified index. Will advance the index number of all todo items below the newly added item by 1.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,
         "category_id": 0,
         "name": "Edit todo item Title/Description",
         "description": "Use the todo set command to set a new title and/or description for the todo item.",
-        "completed": false
+        "completed": true
     },
     "todo": {
         "id": 0,

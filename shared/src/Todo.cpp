@@ -168,6 +168,13 @@ void Todo::addItem(ToDoItem _toDoItem){
 	m_itemCollection.push_back(_toDoItem);
 }
 
+void Todo::addItemAtIndex(ToDoItem _toDoItem, int _index){
+	if (_index < 0 || _index >= m_itemCollection.size()){
+		throw -1;
+	}
+	m_itemCollection.insert(m_itemCollection.begin() + _index, _toDoItem);
+}
+
 void Todo::addCategory(ToDoCategory _toDoCategory){
 	//TODO
 	//Assign ids in a better way
@@ -183,6 +190,9 @@ void Todo::addLabel(ToDoLabel _toDoLabel){
 }
 
 void Todo::removeItemByIndex(int _itemIndex){
+	if (_itemIndex < 0 || _itemIndex >= m_itemCollection.size()){
+		throw -1;
+	}
 	m_itemCollection.erase(m_itemCollection.begin() + _itemIndex);
 }
 

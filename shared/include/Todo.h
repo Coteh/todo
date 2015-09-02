@@ -21,6 +21,7 @@ public:
 	ToDoLabel getLabelByID(int _labelID);
 
 	void addItem(ToDoItem _toDoItem);
+	void addItemAtIndex(ToDoItem _toDoItem, int _index);
 	void addCategory(ToDoCategory _toDoCategory);
 	void addLabel(ToDoLabel _toDoLabel);
 	void removeItemByIndex(int _itemIndex);

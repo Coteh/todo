@@ -14,8 +14,8 @@ public:
 	void registerPass();
 	void registerFailure();
 	void registerError();
-	void registerError(std::string _cusErrMsg);
-	void sayMessage(std::string _message);
+	void registerError(const std::string &_cusErrMsg);
+	void sayMessage(const std::string &_message);
 protected:
 	int testsRun, passes; //failures will be calculated as testsRun - passes
 };

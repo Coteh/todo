@@ -17,6 +17,7 @@ private:
 	void todoWriteTest();
 
 	void addItemTest();
+	void addItemAtIndexTest();
 	void addCategoryTest();
 	void addLabelTest();
 

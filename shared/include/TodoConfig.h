@@ -9,7 +9,7 @@ public:
 	std::string writeConfig();
 
 	void setToDoFilePath(std::string _filePath);
-	std::string getToDoFilePath();
+	std::string getToDoFilePath() const;
 private:
 	std::string m_toDoFilePath;
 };

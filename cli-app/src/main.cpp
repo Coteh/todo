@@ -79,10 +79,10 @@ int main(int argc, char const *argv[]){
 			printf(" remove\t\tRemove a todo item by index number. Provide the todo's index number as the second argument.\n");
 			printf(" show/print\tPrints list of todo items that have been added.\n");
 			printf(" set\t\tModify existing todo items.\n");
-			printf(" config\t\tRetrieve/modify config information.\n");
 			printf(" clear\t\tClear all todo items.\n");
 			printf(" pop\t\tRemoves the first todo item from the list.\n");
 			printf(" count\t\tReturns the amount of todo items currently in the list.\n");
+			printf(" config\t\tRetrieve/modify config information.\n");
 			printf(" -v --version\tDisplay version number.\n");
 			return 0;
 		} else if (strcmp(argv[1], "show") == 0 || strcmp(argv[1], "print") == 0){
@@ -175,12 +175,44 @@ int main(int argc, char const *argv[]){
 				item.toDoItemInfo.description = argv[3];
 				item.setCategoryID(0); //will be assigned to first category automatically for now
 				item.setCompleted(false);
-				todoEngine.addToDo(item);
-				printf("Todo item added.\n");
+				bool isSettingIndex = false, isPrinting = false;
+				int indexToSet = -1;
 				if (argc > 4){
-					if (strcmp(argv[4], "-p") == 0){
-						todoEngine.getToDoPrinter()->printToDos();
+					for (int i = 4; i < argc; i++){
+						if (strcmp(argv[i], "-i") == 0){
+							if (i >= argc - 1){
+								printf("ERROR: Index number not provided.\n");
+								return -1;
+							}
+							char* pEnd;
+							indexToSet = strtol(argv[i + 1], &pEnd, 0);
+							if (strcmp(pEnd, "\0") != 0){
+								printf("ERROR: Could not process index number to place todo item at.\n");
+								return -1;
+							} else{
+								isSettingIndex = true;
+							}
+							i++;
+						} else if (strcmp(argv[i], "-p") == 0){
+							isPrinting = true;
+						}
 					}
+				}
+				if (isSettingIndex){
+					try{
+						todoEngine.addToDoAtIndex(item, indexToSet - 1);
+					} catch (int e){
+						if (e == -1){
+							printf("ERROR: Index number %i out of todo list range.\n", indexToSet);
+							return -1;
+						}
+					}
+				} else{
+					todoEngine.addToDo(item);
+				}
+				printf("Todo item added.\n");
+				if (isPrinting){
+					todoEngine.getToDoPrinter()->printToDos();
 				}
 				return 0;
 			} else if (argc == 3){
@@ -344,6 +376,39 @@ int main(int argc, char const *argv[]){
 							}
 							printf("ToDo item has been unmarked.\n");
 							return 0;
+						} else if (strcmp(argv[4], "info") == 0){
+							if (argc > 5){
+								ToDoItem todoItem;
+								try{
+									todoItem = todoEngine.getToDoItemByIndex(indexNum - 1);
+								} catch (int e){
+									printf("ERROR: Can't edit an item of index out of range.\n");
+									return -1;
+								}
+								ToDoItemInfo infoToSet;
+								infoToSet.name = "";
+								infoToSet.description = "";
+								for (int i = 5; i < argc - 1; i++){
+									if (strcmp(argv[i], "-name") == 0 && infoToSet.name == ""){
+										infoToSet.name = argv[i + 1];
+										i++;
+									} else if (strcmp(argv[i], "-description") == 0 && infoToSet.description == ""){
+										infoToSet.description = argv[i + 1];
+										i++;
+									}
+								}
+								if (infoToSet.name == ""){
+									infoToSet.name = todoItem.toDoItemInfo.name;
+								}
+								if (infoToSet.description == ""){
+									infoToSet.description = todoItem.toDoItemInfo.description;
+								}
+								todoEngine.setToDoInfo(indexNum - 1, infoToSet);
+								printf("Todo info set!\n");
+								return 0;
+							}
+							printf("Please provide a -name and/or -description flag to change the respective item information.\n");
+							return -1;
 						} else if (strcmp(argv[4], "label") == 0){
 							if (argc > 5){
 								if (strcmp(argv[5], "add") == 0){

@@ -62,11 +62,15 @@ bool TodoCLI::hasConfigFile(){
 	return (m_todoConfig != nullptr && m_todoConfig->getToDoFilePath() != "");
 }
 
+ToDoItem TodoCLI::getToDoItemByIndex(int _index){
+	return m_todo.getItemByIndex(_index);
+}
+
 size_t TodoCLI::getToDoListSize(){
 	return m_todo.getTodoListSize();
 }
 
-std::string TodoCLI::getToDoFilePath(){
+std::string TodoCLI::getToDoFilePath() const{
 	return m_todoConfig->getToDoFilePath();
 }
 
@@ -76,6 +80,11 @@ TodoPrinter* TodoCLI::getToDoPrinter() const{
 
 void TodoCLI::addToDo(ToDoItem _toDoItem){
 	m_todo.addItem(_toDoItem);
+	saveToDoFile();
+}
+
+void TodoCLI::addToDoAtIndex(ToDoItem _toDoItem, int _index){
+	m_todo.addItemAtIndex(_toDoItem, _index);
 	saveToDoFile();
 }
 
@@ -95,19 +104,20 @@ void TodoCLI::addLabel(std::string _name, LabelColor _labelColor){
 }
 
 void TodoCLI::removeToDoByIndex(int _index){
-	if (_index < 0 || _index >= m_todo.getTodoListSize()){
-		throw -1;
-	}
 	m_todo.removeItemByIndex(_index);
 	saveToDoFile();
 }
 
-void TodoCLI::popToDo(){
+ToDoItem TodoCLI::popToDo(){
 	if (m_todo.getTodoListSize() <= 0){
 		throw -1;
 	}
+	//get a copy of the item before it is deleted
+	ToDoItem itemToRemove = m_todo.getItemByIndex(0);
+	//now remove it
 	m_todo.removeItemByIndex(0);
 	saveToDoFile();
+	return itemToRemove;
 }
 
 void TodoCLI::removeAllToDos(){
@@ -135,6 +145,16 @@ void TodoCLI::removeCategoryByID(int _categoryID){
 
 void TodoCLI::removeLabelByID(int _labelID){
 	m_todo.removeLabelByID(_labelID);
+	saveToDoFile();
+}
+
+void TodoCLI::setToDoInfo(int _toDoIndex, ToDoItemInfo _itemInfo){
+	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+		throw - 1;
+	}
+	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
+	todoItem.toDoItemInfo = _itemInfo;
+	m_todo.setItem(_toDoIndex, todoItem);
 	saveToDoFile();
 }
 

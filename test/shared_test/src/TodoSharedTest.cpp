@@ -14,6 +14,7 @@ void TodoSharedTest::runTests(){
 	todoReadTest();
 	todoWriteTest();
 	addItemTest();
+	addItemAtIndexTest();
 	addCategoryTest();
 	addLabelTest();
 	itemModificationTest();
@@ -60,6 +61,32 @@ void TodoSharedTest::addItemTest(){
 	if (m_testTodo.getTodoListSize() == 1){
 		registerPass();
 		return;
+	}
+	registerFailure();
+}
+
+void TodoSharedTest::addItemAtIndexTest(){
+	registerTest("Adding an item to the todo list at index");
+	try{
+		refreshTodo();
+		for (int i = 0; i < 5; i++){
+			ToDoItem testItem;
+			m_testTodo.addItem(testItem);
+		}
+		ToDoItem testItemAtIndex;
+		int indexOfIndexItem = 3;
+		int categoryOfIndexItem = 5;
+		testItemAtIndex.toDoItemInfo.name = "Test Adding to Index";
+		testItemAtIndex.toDoItemInfo.description = "Item is in the middle.";
+		testItemAtIndex.setCategoryID(categoryOfIndexItem);
+		m_testTodo.addItemAtIndex(testItemAtIndex, indexOfIndexItem);
+		//Test is passed if the item we just added is at that index
+		if (m_testTodo.getItemByIndex(indexOfIndexItem).getCategoryID() == categoryOfIndexItem){
+			registerPass();
+			return;
+		}
+	} catch (int e){
+		registerError();
 	}
 	registerFailure();
 }

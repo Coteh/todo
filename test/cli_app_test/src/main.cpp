@@ -1,9 +1,12 @@
 #include "TodoCLITest.h"
+#include "TodoPrinterTest.h"
 #include <stdio.h>
 
-TodoCLITest testObj;
+TodoCLITest cliTest;
+TodoPrinterTest printerTest;
 
 int main(int argc, char const *argv[]){
-	testObj.runTests();
+	cliTest.runTests();
+	printerTest.runTests();
 	getchar();
 }

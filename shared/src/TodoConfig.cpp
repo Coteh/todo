@@ -41,6 +41,6 @@ void TodoConfig::setToDoFilePath(std::string _filePath){
 	m_toDoFilePath = _filePath;
 }
 
-std::string TodoConfig::getToDoFilePath(){
+std::string TodoConfig::getToDoFilePath() const{
 	return m_toDoFilePath;
 }

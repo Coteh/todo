@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TODO_CLI_TEST_H
+#define TODO_CLI_TEST_H
+
 #include "BaseTest.h"
 
 class TodoCLITestWrapper;
@@ -15,6 +17,7 @@ private:
 	void refreshEngine();
 
 	void testAddingItem();
+	void testAddingItemAtIndex();
 	void testAddingCategory();
 	void testAddingLabel();
 	void testRemovingItemByIndex();
@@ -24,8 +27,11 @@ private:
 	void testRemovingCategoryByID();
 	void testRemovingLabelByID();
 
+	void testSettingItemInfo();
 	void testSettingItemCategory();
 	void testMarkingItemAsCompleted();
 	void testAppendingLabelToItem();
 	void testRemovingLabelFromItem();
 };
+
+#endif /* end of include guard: TODO_CLI_TEST_H */

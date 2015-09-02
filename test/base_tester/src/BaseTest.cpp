@@ -41,11 +41,11 @@ void BaseTest::registerError(){
 	printf("An error occurred!\n");
 }
 
-void BaseTest::registerError(std::string _cusErrMsg){
+void BaseTest::registerError(const std::string &_cusErrMsg){
 	registerError();
 	printf("--> %s\n", _cusErrMsg.c_str());
 }
 
-void BaseTest::sayMessage(std::string _message){
+void BaseTest::sayMessage(const std::string &_message){
 	printf("%s\n", _message.c_str());
 }
