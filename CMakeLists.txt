@@ -11,6 +11,7 @@ option(TODO_BUILD_TESTS "Build todo unit tests." ON)
 
 # other options
 set(RAPIDJSON_INCLUDE "~/Development_libs/rapidjson/include" CACHE FILEPATH "Include directory for rapidjson")
+set(COMPILER_PARANOID_MODE "Compiler paranoid mode" ON)
 
 # checking for C++11/C++0x support
 include(CheckCXXCompilerFlag)
@@ -30,6 +31,12 @@ include_directories(${RAPIDJSON_INCLUDE})
 
 # add definitions
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+
+# add other compiler flags
+if(COMPILER_PARANOID_MODE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+endif()
 
 # set build path
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")

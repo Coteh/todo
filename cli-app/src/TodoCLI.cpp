@@ -149,7 +149,7 @@ void TodoCLI::removeLabelByID(int _labelID){
 }
 
 void TodoCLI::setToDoInfo(int _toDoIndex, ToDoItemInfo _itemInfo){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+	if (_toDoIndex < 0 || (unsigned int)_toDoIndex >= m_todo.getTodoListSize()){
 		throw - 1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -159,7 +159,7 @@ void TodoCLI::setToDoInfo(int _toDoIndex, ToDoItemInfo _itemInfo){
 }
 
 void TodoCLI::setToDoToCategory(int _toDoIndex, int _categoryID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+	if (_toDoIndex < 0 || (unsigned int)_toDoIndex >= m_todo.getTodoListSize()){
 		throw -1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -169,7 +169,7 @@ void TodoCLI::setToDoToCategory(int _toDoIndex, int _categoryID){
 }
 
 void TodoCLI::markToDoCompleted(int _toDoIndex, bool _completed){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+	if (_toDoIndex < 0 || (unsigned int)_toDoIndex >= m_todo.getTodoListSize()){
 		throw -1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -179,7 +179,7 @@ void TodoCLI::markToDoCompleted(int _toDoIndex, bool _completed){
 }
 
 void TodoCLI::appendLabelToToDo(int _toDoIndex, int _labelID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+	if (_toDoIndex < 0 || (unsigned int)_toDoIndex >= m_todo.getTodoListSize()){
 		throw - 1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);
@@ -189,7 +189,7 @@ void TodoCLI::appendLabelToToDo(int _toDoIndex, int _labelID){
 }
 
 void TodoCLI::eraseLabelFromToDo(int _toDoIndex, int _labelID){
-	if (_toDoIndex < 0 || _toDoIndex >= m_todo.getTodoListSize()){
+	if (_toDoIndex < 0 || (unsigned int)_toDoIndex >= m_todo.getTodoListSize()){
 		throw - 1;
 	}
 	ToDoItem todoItem = m_todo.getItemByIndex(_toDoIndex);

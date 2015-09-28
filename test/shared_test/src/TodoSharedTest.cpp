@@ -32,7 +32,7 @@ void TodoSharedTest::refreshTodo(){
 void TodoSharedTest::todoReadTest(){
 	registerTest("Reading todo items from JSON");
 	try {
-		m_testTodo.parseItems("\{\"todo\":\{\"id\":0,\"category_id\":0,\"name\":\"Test Item\",\"description\":\"This is a test item to see if reading is okay.\",\"completed\":false\}\}");
+		m_testTodo.parseItems("{\"todo\":{\"id\":0,\"category_id\":0,\"name\":\"Test Item\",\"description\":\"This is a test item to see if reading is okay.\",\"completed\":false}}");
 	} catch (int e) {
 		registerFailure();
 		return;

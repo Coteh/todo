@@ -9,5 +9,4 @@ namespace FileIO {
 
 	std::string readFile(std::string _filePath);
 	void writeFile(std::string _filePath, std::string _fileContents, FileWriteType _fileWriteType);
-};
-
+}
