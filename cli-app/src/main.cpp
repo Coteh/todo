@@ -523,7 +523,7 @@ int main(int argc, char const *argv[]){
 			return 0;
 		} else if (strcmp(argv[1], "count") == 0){
 			size_t todoListSize = todoEngine.getToDoListSize();
-			printf("%i\n", todoListSize);
+			printf("%ld\n", todoListSize);
 			return 0;
 		} else if (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0){
 			printf("v1.0\n");

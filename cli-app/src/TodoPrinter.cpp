@@ -19,13 +19,20 @@ TodoPrinter::TodoPrinter(Todo* _todo) {
 	hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleScreenBufferInfo(hstdout, &csbi);
 #endif
+
+	init();
 }
 
 TodoPrinter::TodoPrinter(){
-
+	init();
 }
 
 TodoPrinter::~TodoPrinter() {
+}
+
+void TodoPrinter::init(){
+	nameTag = "Name: ";
+	descriptionTag = "Description: ";
 }
 
 void TodoPrinter::printToDos(){
@@ -95,13 +102,8 @@ void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem){
 
 void TodoPrinter::printToDoItem(const ToDoItem& _toDoItem, bool _verbose){
 	bool hasLabel = _toDoItem.hasLabels();
-	char *nameTag = "", *descriptionTag = "";
-	if (_verbose){
-		nameTag = "Name: ";
-		descriptionTag = "Description: ";
-	}
-	printf("[%s] %s%s\n", (_toDoItem.getCompleted()) ? "X" : " ", nameTag, _toDoItem.toDoItemInfo.name.c_str());
-	printf("%s%s\n", descriptionTag, _toDoItem.toDoItemInfo.description.c_str());
+	printf("[%s] %s%s\n", (_toDoItem.getCompleted()) ? "X" : " ", (_verbose) ? nameTag.c_str() : "", _toDoItem.toDoItemInfo.name.c_str());
+	printf("%s%s\n", (_verbose) ? descriptionTag.c_str() : "", _toDoItem.toDoItemInfo.description.c_str());
 	if (_verbose){
 		printf("Category ID: %i\n", _toDoItem.getCategoryID());
 	}

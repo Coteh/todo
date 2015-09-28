@@ -3,6 +3,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+#include <string>
 
 class Todo;
 class ToDoItem;
@@ -19,6 +20,8 @@ public:
 	TodoPrinter(Todo* _todo);
 	TodoPrinter();
 	~TodoPrinter();
+
+	void init();
 
 	void printToDos();
 	void printToDos(bool _verbose);
@@ -42,4 +45,6 @@ private:
 #endif
 	void beginPrintPaint(int _colorIndex);
 	void endPrintPaint();
+
+	std::string nameTag, descriptionTag;
 };
